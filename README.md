@@ -17,10 +17,9 @@ The pipeline combines **calibrated gradient-boosted decline probabilities** with
 
 ## Quick Links
 
-- 🌐 **[Live Interactive Case Study & Web Report](https://kab-s.github.io/flyrank-page-priority-pipeline/)** ([`index.html`](index.html)) — Deployed interactive case study and research summary.
+- 🌐 **[Live Interactive Case Study](https://kab-s.github.io/flyrank-page-priority-pipeline/)** ([`index.html`](/index.html)) — Deployed interactive case study.
 - 📄 **[Technical Capstone Paper (`work/capstone_report.md`)](work/capstone_report.md)** — Formal publication report with receipts, methodology, and claim boundaries.
 - 📓 **[Authored Research Notebooks (`work/notebooks/`)](work/notebooks/)** — 10 progressive notebooks (w01–w07, capstone) implementing the pipeline from hypothesis to action playbook.
-- 🛡️ **[Data Use & Public-Safety Rules (`DATA_USE.md`)](DATA_USE.md)** — Data usage policy, non-causal claim boundaries, and privacy protections.
 
 ---
 

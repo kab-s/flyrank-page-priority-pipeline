@@ -1,7 +1,7 @@
 # Capstone Report — Page Priority Pipeline: Decision-Support Ranker for Organic Click Decline
 
-- **Author:** FlyRank Applied ML Engineering Fellow
-- **Lane:** Applied ML / Decision-Support Ranking & Early-Warning Systems
+- **Author:** Kabindra Shrestha
+- **Lane:** Applied ML / Decision-Support Ranking/Scoring & Early-Warning Systems
 - **Deployed Case Study & Web Report:** https://kab-s.github.io/flyrank-page-priority-pipeline/
 - **Repo:** https://github.com/kab-s/flyrank-page-priority-pipeline
 - **Date:** 2026-11-02
