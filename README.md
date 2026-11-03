@@ -17,10 +17,9 @@ The pipeline combines **calibrated gradient-boosted decline probabilities** with
 
 ## Quick Links
 
-- 🌐 **[Live Interactive Case Study & Web Report](https://<your-username>.github.io/<repo-name>/)** — Deployed research paper and interactive case study.
-- 📄 **[Technical Capstone Paper (`work/capstone_report.md`)](work/capstone_report.md)** — Formal 10-section applied ML publication with verified receipts.
-- 📓 **[Executable Jupyter Notebooks (`work/notebooks/`)](work/notebooks/)** — 10 dual-mode notebooks (w01–w07, capstone) runnable locally or in Google Colab.
-- 🛡️ **[Submission Defense Rubric (`VALIDATION-CHECK.md`)](VALIDATION-CHECK.md)** — 15-point applied ML rigor and validation defense checklist.
+- 🌐 **[Live Interactive Case Study](https://kab-s.github.io/flyrank-page-priority-pipeline/)** ([`index.html`](/index.html)) — Deployed interactive case study.
+- 📄 **[Technical Capstone Paper (`work/capstone_report.md`)](work/capstone_report.md)** — Formal publication report with receipts, methodology, and claim boundaries.
+- 📓 **[Authored Research Notebooks (`work/notebooks/`)](work/notebooks/)** — 10 progressive notebooks (w01–w07, capstone) implementing the pipeline from hypothesis to action playbook.
 
 ---
 
