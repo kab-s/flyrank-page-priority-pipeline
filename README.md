@@ -9,7 +9,7 @@
 [![Validation](https://img.shields.io/badge/Validation-5--Fold%20GroupKFold-blue.svg)](#4-the-client-memorization-gap-validation-rigor)
 [![Integrity Audit](https://img.shields.io/badge/Integrity%20Audit-100%25%20Verified%20(0%20errors)-blue.svg)](#6-reproduction--notebook-execution-guide)
 
-An enterprise applied machine learning ranking system that analyzes **78.8M+ search performance facts** across 22 client domains to prioritize monthly editorial content reviews under finite human capacity (50 in-depth page audits per editor/month).
+An enterprise applied machine learning ranking system that analyzes **78.8M+ search performance facts** to score an evaluation cohort of 38,271 URLs across 22 mature client domains at snapshot T = 2026-02-01 to prioritize monthly editorial content reviews under finite human capacity (50 in-depth page audits per editor/month).
 
 The pipeline combines **calibrated gradient-boosted decline probabilities** with **empirical click loss exposure** (`Priority = p̂ × Impact × (1 + max(0, Δpos))`), outperforming heuristic baselines by **+10.0% percentage points at monthly budget depth** (K = 50) and maintaining a **+71% relative yield advantage** across wide review queues (K = 500).
 
@@ -19,7 +19,7 @@ The pipeline combines **calibrated gradient-boosted decline probabilities** with
 
 - 🌐 **[Live Interactive Case Study](https://kab-s.github.io/flyrank-page-priority-pipeline/)** ([`index.html`](/index.html)) — Deployed interactive case study.
 - 📄 **[Technical Capstone Paper (`work/capstone_report.md`)](work/capstone_report.md)** — Formal publication report with receipts, methodology, and claim boundaries.
-- 📓 **[Authored Research Notebooks (`work/notebooks/`)](work/notebooks/)** — 10 progressive notebooks (w01–w07, capstone) implementing the pipeline from hypothesis to action playbook.
+- 📓 **[Authored Research Notebooks (`work/notebooks/`)](work/notebooks/)** — 10 progressive notebooks (w01–w07, capstone) implementing the pipeline from research question to action playbook.
 
 ---
 
@@ -31,12 +31,12 @@ The pipeline combines **calibrated gradient-boosted decline probabilities** with
 | **Evaluation Cohort** | **38,271 URLs** | Active content items across 22 mature client domains at monthly boundary T = 2026-02-01 |
 | **Observed Base Rate** | **15.76%** | 6,032 URLs experienced >20% organic impression drop in forward 30-day window [T+1, T+30] |
 | **Top-10 Precision (K = 10)** | **90.00% (5.71× lift)** | 9/10 true declines captured at queue head vs 80.00% heuristic baseline |
-| **Editor Monthly Budget (K = 50)** | **66.00% (4.19× lift)** | **+10.0% pt lift** over baseline (56.00%), capturing 33 true declines and 37.6 clicks saved |
-| **Queue Depth (K = 500)** | **52.20% (3.31× lift)** | **+70.6% (~+71%) relative yield advantage** over baseline (30.60%) by capturing non-linear decay signals |
+| **Editor Monthly Budget (K = 50)** | **66.00% (4.19× lift)** | **+10.0% pt lift** over baseline (56.00%), capturing 33 true declines |
+| **Queue Depth (K = 500)** | **52.20% (3.31× lift)** | **+70.6% (~+71%) relative yield advantage** over baseline (30.60%) |
 | **Client Memorization Gap** | **+12.89% pt ROC-AUC** | Severe leakage exposed under naive random splits; honest 5-fold `GroupKFold` enforced |
 | **Adversarial Leakage Audit** | **4 / 4 PASS (0 flaws)** | Invariant t ≤ T cutoff, zero entity IDs, ablation resistance, and synthetic leak sensitivity |
 | **Operational Code Gates** | **3 Non-Bypassable Gates** | 100% cold-start compliance, 10,753 durable risers protected, 243 extreme spikes verified |
-| **Two-Clock Drift Telemetry** | **PSI = 0.0558** | Input distribution drift well below 0.10 threshold; realized base rate within safe operating band |
+| **Two-Clock Drift Telemetry** | **PSI = 0.0531** | Input distribution drift well below 0.10 threshold; realized base rate within safe operating band |
 
 ---
 
@@ -98,10 +98,10 @@ The pipeline is implemented and documented across modular research notebooks in 
    2. FEATURE EXTRACTION & SAFETY               ▼
    ┌──────────────────────────────────────────────────────────────────────────────────────────┐
    │ 29 Point-in-Time Features (strictly t ≤ T)                                               │
-   │ • Search Momentum (7)   • Traffic Level & Concentration (6)   • Peak Distance (4)        │
-   │ • User Engagement (6)   • Scale-Free SERP Profile (6)                                    │
+   │ • Traffic Level (6)   • Search Momentum (6)   • Page Metadata (12)                       │
+   │ • User Engagement (3) • Client Context (2)                                               │
    │ Adversarial Leakage Suite: SQL Timeline Boundary (0 overlap), Column Quarantines,        │
-   │ Excluded CMS Timestamps & Entity Identifiers, Suspect Ablation Test (0.0025 ΔAUC)        │
+   │ Excluded CMS Timestamps & Entity Identifiers, Suspect Ablation Test (ΔAUC = -0.0417)     │
    └──────────────────────────────────────────────────────────────────────────────────────────┘
                                                 │
    3. TOURNAMENT & VALIDATION                   ▼
@@ -122,8 +122,8 @@ The pipeline is implemented and documented across modular research notebooks in 
    5. ACTION TAXONOMY & TELEMETRY               ▼
    ┌──────────────────────────────────────────────────────────────────────────────────────────┐
    │ "Model Supplies the Order; Audited Rule Supplies the Reason"                             │
-   │ Ranked Priority Queue + Reason Codes (RC_CTR_SLIP, RC_POS_DECAY, RC_MOMENTUM_COLLAPSE)   │
-   │ Two-Clock Telemetry: Pre-release Feature PSI (0.0558) + Post-label Base Rate (15.76%)    │
+   │ Ranked Priority Queue + Reason Codes (SEVERE_VELOCITY_DROP, QUIET_EROSION, SUB_FLOOR)     │
+   │ Two-Clock Telemetry: Pre-release Feature PSI (0.0531) + Post-label Base Rate (15.76%)    │
    └──────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -133,7 +133,7 @@ The pipeline is implemented and documented across modular research notebooks in 
 
 ## 3. Operational Queue Benchmarks
 
-In production, editorial teams do not evaluate abstract metrics like ROC-AUC; they consume an ordered queue. The table below compares the audited **Heuristic Baseline** (Δclicks₂₈), a **Pure Risk Classifier** (p̂ only), and the proposed **Two-Part ML Priority Ranker** across multiple operational review depths:
+In production, editorial teams do not evaluate abstract metrics like ROC-AUC; they consume an ordered queue. The table below compares the audited **Heuristic Baseline** (Velocity × Volume × SERP Drift), a **Pure Risk Classifier** (p̂ only), and the proposed **Two-Part ML Priority Ranker** across multiple operational review depths:
 
 | Queue Depth (K) | Operational Review Workflow | Heuristic Baseline P@K | Pure Risk Classifier P@K | Proposed ML Priority P@K | ML Lift over Base Rate | ML Yield vs Baseline |
 |:---:|:---|:---:|:---:|:---:|:---:|:---:|
@@ -181,12 +181,12 @@ Machine learning models predict decline probabilities, but editorial teams need 
 
 | Tactical Action Category | Top-50 Share | Prescribed Editorial Playbook | Trigger Reason Code |
 |---|:---:|---|---|
-| **Floor Stabilization Review / Cooldown** | **62.0%** (31 pages) | Verify whether page hit a structural floor; prevent premature rewrite | `RC_POS_DECAY`, `RC_MOMENTUM_COLLAPSE` |
-| **Immediate Content Refresh & Intent Update** | **22.0%** (11 pages) | Comprehensive overhaul targeting competitor SERP gains & lost query intent | `RC_CTR_SLIP`, `RC_POS_DECAY` |
-| **Tracking & Query Verification** | **6.0%** (3 pages) | Audit analytics/GSC tagging and query surges before authorizing edits | `RC_INDEX_VOLATILITY`, extreme surge |
-| **Quiet Erosion Deep-Dive** | **6.0%** (3 pages) | Detailed audit of multi-signal decay unflagged by simple heuristics | `RC_MOMENTUM_COLLAPSE` |
-| **Internal Linking & Authority Reinforcement** | **2.0%** (1 page) | Add contextual internal links from high-authority pillar pages | `RC_POS_DECAY` |
-| **Passive Monitoring** | **2.0%** (1 page) | Stable control observation; no editorial intervention permitted | Protected durable riser |
+| **Floor Stabilization Review / Cooldown** | **62.0%** (31 pages) | Verify whether page hit a structural floor; prevent premature rewrite | `SUB_FLOOR_DECAY` |
+| **Immediate Content Refresh & Intent Update** | **22.0%** (11 pages) | Comprehensive overhaul targeting competitor SERP gains & lost query intent | `SEVERE_VELOCITY_DROP_AND_RANK_SLIP` |
+| **Tracking & Query Verification** | **6.0%** (3 pages) | Audit analytics/GSC tagging and query surges before authorizing edits | `EXTREME_SPIKE_ANOMALY` / Gate 3 extreme surge |
+| **Quiet Erosion Deep-Dive** | **6.0%** (3 pages) | Detailed audit of multi-signal decay unflagged by simple heuristics | `QUIET_EROSION_RISK` |
+| **Internal Linking & Authority Reinforcement** | **2.0%** (1 page) | Add contextual internal links from high-authority pillar pages | `MODERATE_DECAY_AND_RANK_SLIP` |
+| **Passive Monitoring** | **2.0%** (1 page) | Stable control observation; no editorial intervention permitted | `STABLE_OR_GROWING` / Gate 2 durable riser |
 
 ![Action Mix Distribution](img/fig_capstone_action_mix.png)
 
@@ -329,6 +329,6 @@ To maintain technical credibility in enterprise production environments, this pi
 
 This project was developed on the **FlyRank Search Intelligence Warehouse**, provided as part of the FlyRank Applied Machine Learning Internship.
 
-- **Data Provider:** [FlyRank AI](https://flyrank.ai)
+- **Data Source:** [FlyRank AI](https://flyrank.ai)
 - **Dataset Scope:** 78,835,655 pseudonymized Search Console and GA4 daily performance facts (2025-01-27 to 2026-06-30).
 - **Engineering Standards:** Built in compliance with Google Rules of ML, enterprise data privacy standards (zero plain client or query strings), and rigorous out-of-domain cross-validation.

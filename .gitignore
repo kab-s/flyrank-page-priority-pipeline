@@ -4,6 +4,8 @@ data/**
 !data/
 !data/raw/
 !data/raw/content_refresh_anonymized.csv
+/local-only
+/scripts/build_viewers.py
 
 # Never commit bulk dataset dumps or archives
 *.parquet
