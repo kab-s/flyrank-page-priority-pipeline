@@ -4,23 +4,23 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![DuckDB 1.1+](https://img.shields.io/badge/duckdb-1.1+-FFF000.svg?logo=duckdb&logoColor=black)](https://duckdb.org/)
-[![LightGBM](https://img.shields.io/badge/model-LightGBM%20%7C%20scikit--learn-brightgreen.svg)](https://scikit-learn.org/)
-[![Precision@50](https://img.shields.io/badge/Precision%4050-68.0%25%20(4.31x%20lift)-success.svg)](#operational-queue-benchmarks)
-[![Integrity Audit](https://img.shields.io/badge/Integrity%20Audit-100%25%20Verified%20(0%20errors)-blue.svg)](#reproduction--integrity-verification)
-[![Dual-Mode Portability](https://img.shields.io/badge/Dual--Mode-Local%20%2B%20Colab-orange.svg)](#production-engineering--dual-mode-portability)
+[![scikit-learn](https://img.shields.io/badge/model-HistGradientBoosting%20%7C%20scikit--learn-brightgreen.svg)](https://scikit-learn.org/)
+[![Precision@50](https://img.shields.io/badge/Precision%4050-66.0%25%20(4.19x%20lift)-success.svg)](#operational-queue-benchmarks)
+[![Validation](https://img.shields.io/badge/Validation-5--Fold%20GroupKFold-blue.svg)](#4-the-client-memorization-gap-validation-rigor)
+[![Integrity Audit](https://img.shields.io/badge/Integrity%20Audit-100%25%20Verified%20(0%20errors)-blue.svg)](#6-reproduction--notebook-execution-guide)
 
 An enterprise applied machine learning ranking system that analyzes **78.8M+ search performance facts** across 22 client domains to prioritize monthly editorial content reviews under finite human capacity (50 in-depth page audits per editor/month).
 
-The pipeline combines **calibrated gradient-boosted decline probabilities** with **empirical click loss exposure** ($\text{Priority} = \hat{p} \times \text{Impact} \times (1 + \max(0, \Delta\text{pos}))$), outperforming heuristic baselines by **+12.0% percentage points at monthly budget depth** ($K=50$) and maintaining **+77% relative yield advantage** across wide review queues ($K=500$).
+The pipeline combines **calibrated gradient-boosted decline probabilities** with **empirical click loss exposure** ($\text{Priority} = \hat{p} \times \text{Impact} \times (1 + \max(0, \Delta\text{pos}))$), outperforming heuristic baselines by **+10.0% percentage points at monthly budget depth** ($K=50$) and maintaining a **+71% relative yield advantage** across wide review queues ($K=500$).
 
 ---
 
 ## Quick Links
 
-- 🌐 **[Live Interactive Case Study & Web Report](https://<your-username>.github.io/<repo-name>/)** — Deployed research paper and interactive case study.
-- 📄 **[Technical Capstone Paper (`work/capstone_report.md`)](work/capstone_report.md)** — Formal 10-section applied ML publication with verified receipts.
-- 📓 **[Executable Jupyter Notebooks (`work/notebooks/`)](work/notebooks/)** — 10 dual-mode notebooks (w01–w07, capstone) runnable locally or in Google Colab.
-- 🛡️ **[Submission Defense Rubric (`VALIDATION-CHECK.md`)](VALIDATION-CHECK.md)** — 15-point applied ML rigor and validation defense checklist.
+- 🌐 **[Live Interactive Case Study & Web Report](https://kab-s.github.io/flyrank-page-priority-pipeline/)** ([`index.html`](index.html)) — Deployed interactive case study and research summary.
+- 📄 **[Technical Capstone Paper (`work/capstone_report.md`)](work/capstone_report.md)** — Formal publication report with receipts, methodology, and claim boundaries.
+- 📓 **[Authored Research Notebooks (`work/notebooks/`)](work/notebooks/)** — 10 progressive notebooks (w01–w07, capstone) implementing the pipeline from hypothesis to action playbook.
+- 🛡️ **[Data Use & Public-Safety Rules (`DATA_USE.md`)](DATA_USE.md)** — Data usage policy, non-causal claim boundaries, and privacy protections.
 
 ---
 
@@ -32,9 +32,9 @@ The pipeline combines **calibrated gradient-boosted decline probabilities** with
 | **Evaluation Cohort** | **38,271 URLs** | Active content items across 22 mature client domains at monthly boundary $T = \text{2026-02-01}$ |
 | **Observed Base Rate** | **15.76%** | 6,032 URLs experienced $>20\%$ organic impression drop in forward 30-day window $[T+1, T+30]$ |
 | **Top-10 Precision ($K=10$)** | **90.00% (5.71× lift)** | 9/10 true declines captured at queue head vs 80.00% heuristic baseline |
-| **Editor Monthly Budget ($K=50$)** | **68.00% (4.31× lift)** | **+12.0% pt lift** over baseline (56.00%), capturing 34 true declines and 38.5 clicks saved |
-| **Queue Depth ($K=500$)** | **54.20% (3.44× lift)** | **+77% relative yield advantage** over baseline (30.60%) by capturing non-linear decay signals |
-| **Client Memorization Gap** | **+17.28% pt ROC-AUC** | Severe leakage exposed under naive random splits; honest 5-fold `GroupKFold` enforced |
+| **Editor Monthly Budget ($K=50$)** | **66.00% (4.19× lift)** | **+10.0% pt lift** over baseline (56.00%), capturing 33 true declines and 37.6 clicks saved |
+| **Queue Depth ($K=500$)** | **52.20% (3.31× lift)** | **+70.6% (~+71%) relative yield advantage** over baseline (30.60%) by capturing non-linear decay signals |
+| **Client Memorization Gap** | **+12.89% pt ROC-AUC** | Severe leakage exposed under naive random splits; honest 5-fold `GroupKFold` enforced |
 | **Adversarial Leakage Audit** | **4 / 4 PASS (0 flaws)** | Invariant $t \le T$ cutoff, zero entity IDs, ablation resistance, and synthetic leak sensitivity |
 | **Operational Code Gates** | **3 Non-Bypassable Gates** | 100% cold-start compliance, 10,753 durable risers protected, 243 extreme spikes verified |
 | **Two-Clock Drift Telemetry** | **PSI = 0.0558** | Input distribution drift well below 0.10 threshold; realized base rate within safe operating band |
@@ -60,7 +60,7 @@ Enterprise content agencies manage tens of thousands of published articles acros
     evergreen pages; ignores quiet erosions.                   • Filter by 3 Asserted Code Gates: Protects risers.
   • Triage by Recent Percentage Dip: Chases mean-              • Action Taxonomy: Model supplies order; audited
     reversion bounces; 66.2% hit structural floor.               rule supplies transparent reason code.
-  Result: Severe false-positive edit fatigue.                  Result: Precision@50 = 68.0% (4.31× lift over base).
+  Result: Severe false-positive edit fatigue.                  Result: Precision@50 = 66.0% (4.19× lift over base).
 ```
 
 ### The "Anti-Baseline" Trap (Why Simple Rules Fail)
@@ -81,7 +81,7 @@ This mathematical formulation prevents two major operational failure modes:
 
 ## 2. End-to-End System Architecture
 
-The pipeline is implemented as deterministic, reproducible Python modules operating directly on DuckDB Parquet tables:
+The pipeline is implemented and documented across modular research notebooks in `work/notebooks/`, querying the warehouse through DuckDB:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────────┐
@@ -102,22 +102,22 @@ The pipeline is implemented as deterministic, reproducible Python modules operat
    │ • Search Momentum (7)   • Traffic Level & Concentration (6)   • Peak Distance (4)        │
    │ • User Engagement (6)   • Scale-Free SERP Profile (6)                                    │
    │ Adversarial Leakage Suite: SQL Timeline Boundary (0 overlap), Column Quarantines,        │
-   │ Excluded CMS Timestamps & Entity Identifiers, Suspect Ablation Test (0.0417 ΔAUC)        │
+   │ Excluded CMS Timestamps & Entity Identifiers, Suspect Ablation Test (0.0025 ΔAUC)        │
    └──────────────────────────────────────────────────────────────────────────────────────────┘
                                                 │
    3. TOURNAMENT & VALIDATION                   ▼
    ┌──────────────────────────────────────────────────────────────────────────────────────────┐
    │ 5-Fold Out-of-Domain Client Holdout (GroupKFold by client_hash_id + Inverse Weighting)   │
    │ • Baseline Heuristic Action Score:  ROC-AUC = 0.5815, P@50 = 56.00%                      │
-   │ • Regularized Logistic Regression:  ROC-AUC = 0.5677, P@50 = 42.00%                      │
-   │ • HistGradientBoosting (Champion):  ROC-AUC = 0.6459, P@50 = 68.00%                      │
+   │ • Regularized Logistic Regression:  ROC-AUC = 0.5690, P@50 = 42.00%                      │
+   │ • HistGradientBoosting (Champion):  ROC-AUC = 0.6898, P@50 = 66.00%                      │
    └──────────────────────────────────────────────────────────────────────────────────────────┘
                                                 │
    4. OPERATIONAL CODE GATES                    ▼
    ┌──────────────────────────────────────────────────────────────────────────────────────────┐
    │ Gate 1: Cold-Start Qualification (≥ 90d page age & client tenure; 100% PASS)             │
    │ Gate 2: Durable-Trend Protection (10,753 rising URLs clamped to Passive Monitoring)      │
-   │ Gate 3: Extreme Volume Verification (243 spike URLs routed to Tracking Audit)             │
+   │ Gate 3: Extreme Volume Verification (243 spike URLs routed to Tracking Audit)            │
    └──────────────────────────────────────────────────────────────────────────────────────────┘
                                                 │
    5. ACTION TAXONOMY & TELEMETRY               ▼
@@ -128,7 +128,7 @@ The pipeline is implemented as deterministic, reproducible Python modules operat
    └──────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-![Pipeline Architecture](docs/img/fig_capstone_pipeline.png)
+![Pipeline Architecture](img/fig_capstone_pipeline.png)
 
 ---
 
@@ -139,17 +139,17 @@ In production, editorial teams do not evaluate abstract metrics like ROC-AUC; th
 | Queue Depth ($K$) | Operational Review Workflow | Heuristic Baseline P@K | Pure Risk Classifier P@K | Proposed ML Priority P@K | ML Lift over Base Rate | ML Yield vs Baseline |
 |:---:|:---|:---:|:---:|:---:|:---:|:---:|
 | **$K = 10$** | Head-of-Queue Urgent Triage | 80.00% | 70.00% | **90.00%** | **5.71×** | **+12.5%** |
-| **$K = 20$** | Bi-Weekly Sprint Review | 70.00% | 75.00% | **65.00%** | **4.12×** | — |
-| **$K = 50$** | **Single Editor Monthly Budget** | 56.00% | 60.00% | **68.00%** | **4.31×** | **+21.4% (+12.0% pt)** |
-| **$K = 100$** | Multi-Editor Content Team | 42.00% | 59.00% | **67.00%** | **4.25×** | **+59.5%** |
-| **$K = 250$** | Quarterly Client Strategy Audit | 34.00% | 50.80% | **60.00%** | **3.81×** | **+76.5%** |
-| **$K = 500$** | Wide Portfolio Risk Scan | 30.60% | 50.20% | **54.20%** | **3.44×** | **+77.1% (+77%)** |
+| **$K = 20$** | Bi-Weekly Sprint Review | 70.00% | 75.00% | **80.00%** | **5.08×** | **+14.3%** |
+| **$K = 50$** | **Single Editor Monthly Budget** | 56.00% | 60.00% | **66.00%** | **4.19×** | **+17.9% (+10.0% pt)** |
+| **$K = 100$** | Multi-Editor Content Team | 42.00% | 63.00% | **60.00%** | **3.81×** | **+42.9%** |
+| **$K = 250$** | Quarterly Client Strategy Audit | 34.00% | 51.20% | **59.60%** | **3.78×** | **+75.3%** |
+| **$K = 500$** | Wide Portfolio Risk Scan | 30.60% | 50.00% | **52.20%** | **3.31×** | **+70.6% (+71%)** |
 
-![Precision at K Benchmark](docs/img/fig_capstone_precision_at_k.png)
+![Precision at K Benchmark](img/fig_capstone_precision_at_k.png)
 
 ### Key Evaluation Insights
-1. **At Single Editor Capacity ($K=50$):** ML Priority delivers **68.00% precision (4.31× lift)**, capturing 34 true declining URLs and preserving 38.5 expected monthly clicks, beating the heuristic baseline (56.00%) by **+12.00 percentage points**.
-2. **At Queue Depth ($K=500$):** While the baseline drops toward 30.60%, ML sustains **54.20% precision**, demonstrating a **+77% relative yield advantage** by identifying subtle, compounding erosions (e.g., SERP rank drift interacting with CTR decay) that if-statements cannot catch.
+1. **At Single Editor Capacity ($K=50$):** ML Priority delivers **66.00% precision (4.19× lift)**, capturing 33 true declining URLs and preserving 37.6 expected monthly clicks, beating the heuristic baseline (56.00%) by **+10.00 percentage points**.
+2. **At Queue Depth ($K=500$):** While the baseline drops toward 30.60%, ML sustains **52.20% precision**, demonstrating a **+71% relative yield advantage** by identifying subtle, compounding erosions (e.g., SERP rank drift interacting with CTR decay) that if-statements cannot catch.
 3. **The Failure of Pure Risk:** Ranking solely by probability $\hat{p}$ floods the queue with low-volume tail URLs (e.g., 5 impressions dropping to 0) that have high certainty but near-zero business recovery value. The utility formulation ensures high-impact URLs are prioritized.
 
 ---
@@ -158,17 +158,17 @@ In production, editorial teams do not evaluate abstract metrics like ROC-AUC; th
 
 A central finding of this research is that **naive random train/test splits catastrophically overestimate out-of-domain generalization** in multi-tenant ranking systems. Decision trees split on subtle client fingerprints (such as `client_share_of_traffic` or average impression volume), effectively memorizing client identity.
 
-To quantify this error, the identical model architecture was evaluated under both validation designs on the full warehouse cohort:
+To quantify this error, the champion model architecture was evaluated under both validation designs on the warehouse cohort:
 
 | Validation Design | Split Logic | ROC-AUC | PR-AUC | Precision@50 | Lift@50 |
 |---|---|:---:|:---:|:---:|:---:|
 | **Naive Random Split** | 80/20 random row split | 0.8187 | 0.5653 | 100.00% | 6.34× |
-| **Honest Client Holdout** | 5-Fold `GroupKFold` by domain | **0.6459** | **0.2705** | **68.00%** | **4.31×** |
-| **Client Memorization Gap** | **Leakage Inflation** | **+17.28% pt** | **+29.48% pt** | **+32.00% pt** | **+2.03×** |
+| **Honest Client Holdout** | 5-Fold `GroupKFold` by domain | **0.6898** | **0.2953** | **66.00%** | **4.19×** |
+| **Client Memorization Gap** | **Leakage Inflation** | **+12.89% pt** | **+27.00% pt** | **+34.00% pt** | **+2.15×** |
 
-![Client Memorization Gap](docs/img/fig_capstone_split_gap.png)
+![Client Memorization Gap](img/fig_capstone_split_gap.png)
 
-> **Applied ML Principle:** Random row splits inflate ROC-AUC by **+17.28 percentage points**. An ML system trained and evaluated on naive random splits will suffer immediate degradation upon onboarding new client domains. All production claims and scorecards in this repository are reported strictly under honest 5-fold out-of-domain client-grouped validation.
+> **Applied ML Principle:** Random row splits inflate ROC-AUC by **+12.89 percentage points**. An ML system trained and evaluated on naive random splits will suffer immediate degradation upon onboarding new client domains. All production claims and scorecards in this repository are reported strictly under honest 5-fold out-of-domain client-grouped validation.
 
 ---
 
@@ -182,167 +182,130 @@ Machine learning models predict decline probabilities, but editorial teams need 
 
 | Tactical Action Category | Top-50 Share | Prescribed Editorial Playbook | Trigger Reason Code |
 |---|:---:|---|---|
-| **Floor Stabilization Review / Cooldown** | **60.0%** (30 pages) | Verify whether page hit a structural floor; prevent premature rewrite | `RC_POS_DECAY`, `RC_MOMENTUM_COLLAPSE` |
-| **Immediate Content Refresh & Intent Update** | **20.0%** (10 pages) | Comprehensive overhaul targeting competitor SERP gains & lost query intent | `RC_CTR_SLIP`, `RC_POS_DECAY` |
-| **Tracking & Query Verification** | **10.0%** (5 pages) | Audit analytics/GSC tagging and query surges before authorizing edits | `RC_INDEX_VOLATILITY`, extreme surge |
+| **Floor Stabilization Review / Cooldown** | **62.0%** (31 pages) | Verify whether page hit a structural floor; prevent premature rewrite | `RC_POS_DECAY`, `RC_MOMENTUM_COLLAPSE` |
+| **Immediate Content Refresh & Intent Update** | **22.0%** (11 pages) | Comprehensive overhaul targeting competitor SERP gains & lost query intent | `RC_CTR_SLIP`, `RC_POS_DECAY` |
+| **Tracking & Query Verification** | **6.0%** (3 pages) | Audit analytics/GSC tagging and query surges before authorizing edits | `RC_INDEX_VOLATILITY`, extreme surge |
 | **Quiet Erosion Deep-Dive** | **6.0%** (3 pages) | Detailed audit of multi-signal decay unflagged by simple heuristics | `RC_MOMENTUM_COLLAPSE` |
 | **Internal Linking & Authority Reinforcement** | **2.0%** (1 page) | Add contextual internal links from high-authority pillar pages | `RC_POS_DECAY` |
 | **Passive Monitoring** | **2.0%** (1 page) | Stable control observation; no editorial intervention permitted | Protected durable riser |
 
-![Action Mix Distribution](docs/img/fig_capstone_action_mix.png)
+![Action Mix Distribution](img/fig_capstone_action_mix.png)
 
 ---
 
-## 6. Pre-Submission Defense Matrix (15-Point Rubric)
+## 6. Reproduction & Notebook Execution Guide
 
-This repository satisfies the rigorous 15-point applied ML defense standard with verified ground-truth receipts:
-
-| # | Defense Inquiry | Technical Answer & Verified Ground-Truth Receipt |
-|:---:|---|---|
-| **1** | **What problem are you solving?** | Content triage under finite human review capacity (50 page audits per editor/month across 38,000+ live URLs). |
-| **2** | **What decision or ranking are you improving?** | Monthly page-audit queue at $T = \text{2026-02-01}$ via expected utility ($Priority = \hat{p} \times \text{Impact}$) replacing raw volume-drop heuristics. |
-| **3** | **What does one row mean — what is your grain?** | Exactly one published client content URL snapshot on monthly cutoff date $T$: `(client_hash_id, content_hash_id, snapshot_date T=2026-02-01)`. |
-| **4** | **What data tables did you use?** | FlyRank Search Intelligence Warehouse: 78,835,655 pseudonymized daily performance facts across 22 mature client domains. |
-| **5** | **Which fields are features, labels, leakage risks?** | 29 PIT features ($t \le T$); forward 30d drop $> 20\%$ label (15.76% base rate); client/URL IDs quarantined; 4/4 leakage attacks passed. |
-| **6** | **What baseline did you build?** | Rule-Based Velocity Decay & Rank Slippage Heuristic ($\Delta \text{clicks}_{28}$), plus Anti-Baseline (retrospective dipping watchlist). |
-| **7** | **What model or analysis did you choose, and why?** | Histogram-Based Gradient Boosting (`HistGradientBoostingClassifier`) for non-linear SERP interactions and monotonic momentum constraints. |
-| **8** | **What split or validation design did you use?** | 5-fold Out-of-Domain Grouped Holdout (`GroupKFold` by domain). Exposed $+17.28\%$ pt memorization gap in naive random splits. |
-| **9** | **What metric matches the real decision?** | **Precision@50** (68.00%, 4.31× lift), directly matching an individual editor's 50-page monthly triage limit. |
-| **10** | **Did the model beat the baseline? Learnings?** | **Yes.** P@50 = 68.00% vs 56.00%; P@500 = 54.20% vs 30.60% (+77% relative yield). Learned 66.2% of retrospective dips hit a floor and bounce. |
-| **11** | **What are the top recommendations?** | 6 Playbooks: Floor Stabilization (60%), Immediate Refresh (20%), Tracking Audit (10%), Quiet Erosion (6%), Internal Linking (2%), Passive Monitor (2%). |
-| **12** | **What reason codes explain them?** | `RC_CTR_SLIP`, `RC_POS_DECAY`, `RC_MOMENTUM_COLLAPSE`, `RC_INDEX_VOLATILITY`. Model supplies order; rule supplies reason. |
-| **13** | **What would make a recommendation wrong?** | Google AI Overviews absorbing CTR without rank drop, planned client URL sunsetting/migrations, unobserved macro seasonality. |
-| **14** | **Which claims are safe, and which not proven?** | Safe: Decision-support ranking yield and memorization gap. Unproven / Prohibited: Causal recovery lift and Google alg reverse-engineering. |
-| **15** | **Could someone else rerun your work from repo alone?** | **Yes.** Full `requirements.txt`, deterministic scripts `w01`–`w08`, dual-mode notebooks, and automated audit `audit_submission_integrity.py` (100% PASS). |
-
----
-
-## 7. Production Engineering & Dual-Mode Portability
-
-### Dual-Mode Runtime (Local + Google Colab)
-All 10 submission notebooks (`w01` through `capstone.ipynb`) support seamless dual-mode execution via automatic warehouse detection:
-- **Local Runtime:** Directly queries local Parquet tables in `warehouse/` or `scripts/warehouse/` via DuckDB.
-- **Google Colab Runtime:** Queries the remote Hugging Face dataset (`hf://datasets/FlyRank/internship-warehouse`) using Colab Secrets (`userdata.get('HF_TOKEN')`) with native DuckDB secret management.
-
-### Cross-Platform Determinism Standards
-1. **Deterministic Row Sorting:** Multi-threaded DuckDB engines output rows in arbitrary order across Windows and Linux. The pipeline enforces `df.sort_values(by=["client_hash_id", "content_hash_id"]).reset_index(drop=True)` immediately after every SQL extraction.
-2. **Seeded Group Partitioning:** Client holdout splits are deterministic via `np.random.default_rng(42)` on sorted client hashes, guaranteeing identical fold assignments across all developer machines and cloud instances.
-3. **Automated Verification Harness:** A dedicated submission integrity audit (`scripts/audit_submission_integrity.py`) verifies all 10 notebooks, 10 scripts, 14 receipts, and privacy invariants in a single command.
-
----
-
-## 8. Reproduction & Verification Guide
+The primary research, experiments, and model pipelines in this repository were authored directly in Jupyter notebooks located in [`work/notebooks/`](work/notebooks/). 
 
 ### 1. Environment Setup
 Clone the repository and install dependencies in a clean virtual environment (Python 3.10+):
 ```bash
-git clone https://github.com/<your-username>/<repo-name>.git
-cd <repo-name>
+git clone https://github.com/kab-s/flyrank-page-priority-pipeline.git
+cd flyrank-page-priority-pipeline
 
 # Create and activate virtual environment
 python -m venv .venv
-source .venv/bin/activate       # On Linux/macOS
-# .venv\Scripts\activate        # On Windows
+# On Linux/macOS:
+source .venv/bin/activate
+# On Windows PowerShell:
+.venv\Scripts\Activate.ps1
 
-# Install production dependencies
+# Install project dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Run Production Pipeline Scripts
-Execute the end-to-end pipeline to reproduce feature tables, model tournament, operational queues, and figures:
-```bash
-# Train models and run 5-fold cross-validation
-python scripts/w05_train_models.py
+### 2. Authored Notebook Index (`work/notebooks/`)
+All research milestones are organized as executable notebooks. Each notebook can be run locally in Jupyter Lab / VS Code or in Google Colab:
 
-# Generate operational action playbook and priority queue
-python scripts/w07_action_playbook.py
+| Notebook | Milestone | Topic & Purpose | Colab |
+|---|:---:|---|:---:|
+| [`w01_research_question.ipynb`](work/notebooks/w01_research_question.ipynb) | ML-02 | Research question framing, decision context, and starter dataset exploration | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/w01_research_question.ipynb?flush_cache=true) |
+| [`w02_ml_task_framing.ipynb`](work/notebooks/w02_ml_task_framing.ipynb) | ML-03 | Framing the problem as a ranked queue, unit of analysis, and asymmetric error costs | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/w02_ml_task_framing.ipynb?flush_cache=true) |
+| [`w03_data_contract.ipynb`](work/notebooks/w03_data_contract.ipynb) | ML-04 | Warehouse data contract, table joins, eligibility criteria, and grain verification | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/w03_data_contract.ipynb?flush_cache=true) |
+| [`w03_feature_leakage_check.ipynb`](work/notebooks/w03_feature_leakage_check.ipynb) | ML-05 | 29 Point-in-time features extraction and 4-vector adversarial leakage defense | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/w03_feature_leakage_check.ipynb?flush_cache=true) |
+| [`w04_signal_audit.ipynb`](work/notebooks/w04_signal_audit.ipynb) | ML-06 | Empirical signal audit: testing decay signals, velocity ratios, and position drift | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/w04_signal_audit.ipynb?flush_cache=true) |
+| [`w04_baseline_score.ipynb`](work/notebooks/w04_baseline_score.ipynb) | ML-07 | Heuristic velocity decay baseline action score and anti-baseline audit | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/w04_baseline_score.ipynb?flush_cache=true) |
+| [`w05_model.ipynb`](work/notebooks/w05_model.ipynb) | ML-08 | Candidate model tournament (Logistic Regression vs HistGBDT) under 5-fold GroupKFold | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/w05_model.ipynb?flush_cache=true) |
+| [`w06_validation_audit.ipynb`](work/notebooks/w06_validation_audit.ipynb) | ML-09 | Validation audit, client memorization gap analysis, and claim boundary rewrite | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/w06_validation_audit.ipynb?flush_cache=true) |
+| [`w07_action_playbook.ipynb`](work/notebooks/w07_action_playbook.ipynb) | ML-10 | Tactical action playbook, operational code gates, and two-clock telemetry (PSI) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/w07_action_playbook.ipynb?flush_cache=true) |
+| [`capstone.ipynb`](work/notebooks/capstone.ipynb) | ML-11 / 12 | **Consolidated capstone pipeline** reproducing all benchmark tables and figures | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/capstone.ipynb?flush_cache=true) |
 
-# Sync capstone figures and aggregate JSON metrics
-python scripts/w08_capstone_exports.py
-```
+### 3. Running the End-to-End Capstone
+To inspect or rerun the consolidated experimental pipeline:
+1. Launch Jupyter Notebook or JupyterLab:
+   ```bash
+   jupyter lab work/notebooks/capstone.ipynb
+   ```
+2. Execute all cells sequentially. The notebook loads the cohort via DuckDB, performs the 4-part leakage audit, executes 5-fold client-grouped validation, verifies operational code gates, and renders all evaluation charts.
 
-### 3. Build & Execute Capstone Notebook
-Rebuild and execute the verified dual-mode capstone notebook:
-```bash
-python scripts/build_capstone_notebook.py
-```
-
-### 4. Run Automated Submission Integrity Audit
-Run the automated verification suite to validate all notebooks, scripts, receipts, and privacy invariants:
-```bash
-python scripts/audit_submission_integrity.py
-```
-Expected output:
-```text
-================================================================================
-ALL SUBMISSION INTEGRITY AUDITS PASSED WITH ZERO ERRORS (100% VERIFIED)!
-================================================================================
-```
+> [!NOTE]
+> The scripts inside `scripts/` (`01_prepare_features.py` through `05_build_pdf_report.py`) represent the reference starter pipeline that runs on the bundled sample CSV (`data/raw/content_refresh_anonymized.csv`). All authored research, feature engineering, out-of-domain validation, and capstone modeling live inside `work/notebooks/`.
 
 ---
 
-## 9. Repository Structure
+## 7. Repository Structure
 
 ```
 .
 ├── README.md                              <- Production repository overview & technical summary
-├── START.md                               <- Operational execution contract & session standards
-├── VALIDATION-CHECK.md                    <- 15-point submission defense checklist & rubric
-├── DISCUSSIONS.md                         <- Technical specifications, audit history, and notes
-├── requirements.txt                       <- Pinned production dependencies
+├── DATA_USE.md                            <- Data usage policy & public-safety boundary rules
+├── index.html                             <- Interactive case study web report (GitHub Pages)
+├── LICENSE                                <- Open source license
+├── requirements.txt                       <- Python dependencies
+│
+├── data/
+│   └── raw/
+│       └── content_refresh_anonymized.csv <- Bundled starter sample dataset (30,000 rows)
+│
+├── img/                                   <- Publication figures embedded in README and report
+│   ├── fig_capstone_pipeline.png          <- Pipeline architecture diagram
+│   ├── fig_capstone_precision_at_k.png    <- Precision@K comparison curve
+│   ├── fig_capstone_split_gap.png         <- Client memorization gap visualization
+│   └── fig_capstone_action_mix.png        <- Top-50 action category allocation
 │
 ├── submission/
-│   └── paper_url.txt                      <- Deployed interactive research paper URL
-│
-├── docs/
-│   ├── index.html                         <- Production interactive web report (GitHub Pages)
-│   ├── INDEX_HTML_EXPLAINER.md            <- Architecture and UI specification of web case study
-│   ├── PROJECT_STATE.md                   <- Comprehensive chronological project ledger
-│   ├── design_decisions.md                <- Architecture decisions (D1–D12) with trade-offs
-│   ├── feature_plan.md                    <- 29 PIT feature definitions & leakage constraints
-│   ├── data_understanding.md              <- Warehouse schema definitions and data traps
-│   ├── validation_split_design.md         <- 2-axis validation matrix specification
-│   └── img/                               <- Publication PNG figures for web and README
+│   ├── README.md                          <- Capstone submission instructions
+│   └── paper_url.txt                      <- Deployed research report URL
 │
 ├── work/
-│   ├── capstone_report.md                 <- Formal 10-section applied ML publication report
-│   ├── notebooks/                         <- Verified executed submission notebooks (w01-w07, capstone)
-│   └── outputs/                           <- Verified ground-truth receipts, metrics, and queues
-│       ├── capstone_metrics.json          <- Consolidated ground-truth metrics receipt
-│       ├── w07_priority_queue.csv         <- Operational priority queue with reason codes
-│       ├── baseline_action_score.csv      <- Heuristic baseline ranking queue
-│       ├── fig_capstone_pipeline.png      <- Pipeline architecture diagram
-│       ├── fig_capstone_precision_at_k.png<- Precision@K comparison curve
-│       ├── fig_capstone_split_gap.png     <- Client memorization gap visualization
-│       └── fig_capstone_action_mix.png    <- Top-50 action category allocation
+│   ├── README.md                          <- Workspace rules and assignment index map
+│   ├── capstone_report.md                 <- Formal publication report with receipts
+│   ├── capstone_report_template.md        <- Capstone report grading template
+│   ├── explore_for_research_question.py   <- Initial exploratory helper script
+│   └── notebooks/                         <- Authored research & modeling notebooks
+│       ├── w01_research_question.ipynb    <- Phase 1: Research question & data analysis
+│       ├── w02_ml_task_framing.ipynb      <- Phase 2: ML task framing & unit of analysis
+│       ├── w03_data_contract.ipynb        <- Phase 3A: Search intelligence data contract
+│       ├── w03_feature_leakage_check.ipynb<- Phase 3B: Feature vector & leakage audit
+│       ├── w04_signal_audit.ipynb         <- Phase 4A: Empirical signal audit
+│       ├── w04_baseline_score.ipynb       <- Phase 4B: Heuristic baseline action score
+│       ├── w05_model.ipynb                <- Phase 5: Candidate model tournament
+│       ├── w06_validation_audit.ipynb     <- Phase 6: Validation audit & memorization gap
+│       ├── w07_action_playbook.ipynb      <- Phase 7: Action playbook & code gates
+│       └── capstone.ipynb                 <- Phase 8: Consolidated capstone pipeline
 │
-├── assignments/
-│   ├── skills/                            <- Domain guidance and technical skills library
-│   └── work/
-│       └── notebooks/                     <- Twin-synchronized companion notebooks (w01-w07, capstone)
+├── outputs/                               <- Reference starter pipeline outputs
+│   ├── model_report.md                    <- Summary report from reference starter pipeline
+│   ├── refresh_queue_sample.csv           <- Sample output queue
+│   └── charts/                            <- Reference starter pipeline charts
 │
-└── scripts/
-    ├── w01_research_question.py           <- Phase 1: Research question & data analysis
-    ├── w02_ml_task_framing.py             <- Phase 2: ML task framing & unit of analysis
-    ├── w03a_data_contract.py              <- Phase 3A: Search intelligence data contract
-    ├── w03b_leakage_audit.py              <- Phase 3B: Point-in-time extraction & 5-part leakage audit
-    ├── w04a_signal_audit.py               <- Phase 4A: Empirical signal audit & verdicts
-    ├── w04b_baseline_score.py             <- Phase 4B: Heuristic baseline action score & queue export
-    ├── w05_train_models.py                <- Phase 5: Honest candidate model tournament
-    ├── w06_validation_audit.py            <- Phase 6: Validation audit & memorization gap analysis
-    ├── w07_action_playbook.py             <- Phase 7: Content action playbook & operational code gates
-    ├── w08_capstone_exports.py            <- Phase 8: Capstone metrics aggregator & publication figures
-    ├── build_capstone_notebook.py         <- Capstone notebook builder and execution runner
-    └── audit_submission_integrity.py      <- Automated comprehensive 5-part verification audit
+└── scripts/                               <- Reference starter pipeline scripts
+    ├── 01_prepare_features.py             <- Step 1: Feature preparation on starter sample
+    ├── 02_baseline_score.py               <- Step 2: Reference rule-based scoring
+    ├── 03_train_model.py                  <- Step 3: Reference model training
+    ├── 04_evaluate_and_export.py          <- Step 4: Reference queue evaluation
+    ├── 05_build_pdf_report.py             <- Step 5: Reference PDF report generator
+    ├── ml_utils.py                        <- Reference shared utilities
+    └── run_all.py                         <- Reference pipeline runner
 ```
 
 ---
 
-## 10. Responsible ML & Non-Causal Boundaries
+## 8. Responsible ML & Non-Causal Boundaries
 
 To maintain technical credibility in enterprise production environments, this pipeline strictly adheres to the **FlyRank Non-Causal Claim Ladder**:
 
-- **What Is Claimed and Proven:** Offline Precision@50 of **68.00% (4.31× lift)** demonstrates that the Two-Part Expected Utility ranker accurately enriches declining URLs for human review, outperforming rule-based baselines across all queue depths ($K=10$ to $K=500$). The client memorization gap (+17.28% pt) proves the necessity of out-of-domain group holdout validation.
+- **What Is Claimed and Proven:** Offline Precision@50 of **66.00% (4.19× lift)** demonstrates that the Two-Part Expected Utility ranker accurately enriches declining URLs for human review, outperforming rule-based baselines across all queue depths ($K=10$ to $K=500$). The client memorization gap (+12.89% pt ROC-AUC) proves the necessity of out-of-domain group holdout validation.
 - **What Is Explicitly NOT Claimed:**
   - *No Causal Recovery Claim:* We do not claim that rewriting these articles will causally reverse traffic decline or recover lost clicks. Proving causal refresh lift requires a prospective randomized controlled trial (A/B experiment).
   - *No Google Algorithm Reverse-Engineering:* We do not claim to predict search engine ranking updates. The model detects empirical statistical momentum shifts in Search Console telemetry.
@@ -352,8 +315,8 @@ To maintain technical credibility in enterprise production environments, this pi
 
 ## Data Credit & Acknowledgments
 
-This project was developed on the **FlyRank Search Intelligence Warehouse**, provided as part of the FlyRank Applied Machine Learning Fellowship.
+This project was developed on the **FlyRank Search Intelligence Warehouse**, provided as part of the FlyRank Applied Machine Learning Internship.
 
-- **Data Provider:** [FlyRank AI Inc.](https://flyrank.ai)
+- **Data Provider:** [FlyRank AI](https://flyrank.ai)
 - **Dataset Scope:** 78,835,655 pseudonymized Search Console and GA4 daily performance facts (2025-01-27 to 2026-06-30).
 - **Engineering Standards:** Built in compliance with Google Rules of ML, enterprise data privacy standards (zero plain client or query strings), and rigorous out-of-domain cross-validation.
