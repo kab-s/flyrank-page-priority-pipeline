@@ -38,7 +38,9 @@ Unassisted manual triage across 38,000+ live URLs is impossible, while naive heu
 * **Unit of Analysis:** A single published content item snapshot at monthly decision boundary $T$: `(content_hash_id, snapshot_date T = 2026-02-01)`.
 * **Output:** An ordered priority queue where each row delivers `ml_priority_score`, queue rank, calibrated decline probability $\hat{p}$, estimated monthly clicks at stake, tactical action category, and transparent reason code.
 * **Target Label Definition:** Forward-looking 30-day organic impression drop exceeding 20% relative to the pre-decision 30-day baseline window:
+
   $$\text{Target} = \mathbf{1}\left[\sum_{t=T+1}^{T+30} \text{impr}_t < 0.80 \times \sum_{t=T-30}^{T} \text{impr}_t\right]$$
+
   Enforced with a 100-impression pre-decision volume floor and an availability rule ($\ge 25$ days of active Search Console reporting).
 * **Asymmetric Error Costs:**
   * *Cost of False Positive (Type I):* An editor spends 4 to 8 hours rewriting an article that was merely experiencing temporary seasonality or durable growth, introducing risk of ranking destabilization and wasting scarce retainer budget.
@@ -70,7 +72,7 @@ To maintain complete client-agnostic portability and prevent target leakage, all
 
 ### Proactive 4-Vector Leakage Attack Suite
 Before training candidate models, the feature matrix was subjected to four adversarial leakage assertions:
-1. **SQL Timeline Boundary Assertion:** Invariant $\max(\text{feature\_report\_date}) \le T\text{ (2026-02-01)}$ and $\min(\text{label\_report\_date}) \ge T+1\text{ (2026-02-02)}$ held with **0 illegal overlaps**, mathematically guaranteeing zero label contamination.
+1. **SQL Timeline Boundary Assertion:** Invariant $\max(t_{\text{feature}}) \le T$ (2026-02-01) and $\min(t_{\text{label}}) \ge T+1$ (2026-02-02) — asserting `max(feature_report_date) <= '2026-02-01'` vs `min(label_report_date) >= '2026-02-02'` — held with **0 illegal overlaps**, mathematically guaranteeing zero label contamination.
 2. **Excluded Fields Invariant:** Automated schema audit verified **0 forbidden columns** (0 entity hashes, 0 CMS update timestamps, 0 composite health scores) present in feature matrix $X$.
 3. **Suspect Feature Ablation Test:** Retraining without the top suspect ratio produced a negligible change in out-of-fold generalization ($\Delta\text{ROC-AUC} = -0.0417$, safely below the $0.05$ collapse threshold), confirming the signal represents genuine predictive momentum rather than peeking.
 4. **Synthetic Leakage Detection Attack:** Deliberately injecting forward 30-day traffic ratios into the feature set caused ROC-AUC to surge immediately to $1.0000$, verifying that the validation harness possesses 100% sensitivity to forward leakage.
@@ -81,8 +83,16 @@ Before training candidate models, the feature matrix was subjected to four adver
 
 ### Formulating the Transparent Heuristic Baseline
 Before training machine learning classifiers, a transparent, unweighted heuristic baseline action score is established, combining traffic volume, velocity decay, and SERP slippage:
-$$\text{Baseline Action Score} = \left(1.0 - \min(0.80, \text{impr\_ratio}_{30\_prev30})\right) \times \ln(1 + \text{impr}_{w30}) \times \left(1.0 + \max(0, \Delta\text{pos}_{30\_prev30})\right)$$
-Pages with severe velocity decay ($<0.50\times$), rank drops ($\ge +0.5$ positions), and baseline volume $\ge 500$ impressions receive high baseline scores with human-interpretable reason codes (e.g., `SEVERE_VELOCITY_DROP_AND_RANK_SLIP`).
+
+$$\text{Baseline Action Score} = \left(1.0 - \min(0.80, \text{Velocity Ratio})\right) \times \ln(1 + \text{Volume}_{30}) \times \left(1.0 + \max(0, \Delta\text{pos})\right)$$
+
+where $\text{Velocity Ratio} = \text{impr}_{30\text{d}} / \text{impr}_{\text{prev30d}}$ (`impr_ratio_30_prev30`), $\text{Volume}_{30} = \text{impr}_{30\text{d}}$ (`impr_w30`), and $\Delta\text{pos}$ is SERP rank slippage (`position_change_30_prev30`). In Python code:
+```python
+# Evaluated for pages with impr_w30 >= 500 and impr_ratio_30_prev30 < 0.80:
+baseline_action_score = (1.0 - min(0.80, impr_ratio_30_prev30)) * log(1 + impr_w30) * (1.0 + max(0.0, position_change_30_prev30))
+```
+
+Pages with severe velocity decay (`< 0.50×`), rank drops (`≥ +0.5` positions), and baseline volume `≥ 500` impressions receive high baseline scores with human-interpretable reason codes (e.g., `SEVERE_VELOCITY_DROP_AND_RANK_SLIP`).
 
 ### The Anti-Baseline: Why the Intuitive Rule Fails (Mean Reversion)
 The most common intuitive heuristic deployed by SEO teams is an "already dipping" watchlist: targeting pages that experienced the steepest drops in recent weeks.
@@ -110,7 +120,9 @@ This transparent heuristic provides the honest operational hurdle the machine le
 
 ### Two-Part Expected Utility Framework
 The ranking problem is decoupled into an empirical risk classifier and an impact estimator:
+
 $$\text{Priority Score} = \hat{p}(\text{decline}) \times \text{Expected Clicks Lost} \times \left(1 + \max(0, \Delta\text{pos})\right)$$
+
 Where $\hat{p} \in [0, 1]$ is the calibrated decline probability, and Expected Clicks Lost is calculated via Empirical-Bayes smoothed baseline monthly clicks multiplied by the dynamic empirical drop severity ($57.53\%$, derived from retrospective decaying pages preceding $T$ with zero leakage).
 
 This mathematical formulation prevents two critical operational failure modes:
@@ -271,14 +283,14 @@ Because organic search decline takes 30 days to confirm, we cannot immediately c
 1. **Clock 1: Pre-Release Input Gate (Day 0 / Instant $T$):**
    * *When it runs:* Immediately prior to publishing the monthly 50-page priority list to editorial teams.
    * *What it checks:* **Input Data Drift.** Scans incoming search traffic and momentum features using the **Population Stability Index (PSI)** to compare current feature distributions against training baselines.
-   * *Status at $T = \text{2026-02-01}$:* Momentum feature PSI evaluated to **0.0531** (comfortably passing the $< 0.10$ stability threshold, granting automated clearance to publish the monthly queue).
+   * *Status at $T = \text{2026-02-01}$:* Momentum feature PSI evaluated to **0.0531** (comfortably passing the `< 0.10` stability threshold, granting automated clearance to publish the monthly queue).
    * *Operational Safeguard:* Catches analytics tracking outages, warehouse ETL corruptions, or extreme holiday anomalies *before* 200+ human audit hours are spent on bad recommendations.
 
 2. **Clock 2: Outcome Tripwire (Day 30 / Instant $T+30$):**
    * *When it runs:* Exactly 30 days later, once actual Google Search Console performance data arrives.
-   * *What it checks:* **Realized Base-Rate Drift.** Verifies that the portfolio-wide 30-day decline rate remains safely within the pre-registered operating band of $[10.76\%, 20.76\%]$ (centered on the $15.76\%$ historical base rate $\pm 5.0\%$).
+   * *What it checks:* **Realized Base-Rate Drift.** Verifies that the portfolio-wide 30-day decline rate remains safely within the pre-registered operating band of [10.76%, 20.76%] (centered on the 15.76% historical base rate ± 5.0%).
    * *Status at $T+30$:* Observed portfolio decline rate evaluated to **15.76%** (operating stably within the normal operating band).
-   * *Operational Safeguard:* Protects against unobserved macro shocks (such as broad Google Core Algorithm Updates or unannounced client site migrations). If portfolio decline surges outside this band ($> 5.0\%$ shift), automated model releases pause immediately for manual review and recalibration.
+   * *Operational Safeguard:* Protects against unobserved macro shocks (such as broad Google Core Algorithm Updates or unannounced client site migrations). If portfolio decline surges outside this band (`> 5.0%` shift), automated model releases pause immediately for manual review and recalibration.
 
 ### Confidence and Explicit Boundaries (Non-Causal Claim Ladder)
 * **What Is Claimed and Proven:** Offline Precision@50 of **66.00% (4.19× lift)** demonstrates that the Two-Part ML ranker accurately enriches declining pages for human review, outperforming the heuristic baseline rule across all queue depths ($K=10$ to $K=500$). The client memorization gap (+12.89% pt ROC-AUC) proves the necessity of out-of-domain group holdout validation.
