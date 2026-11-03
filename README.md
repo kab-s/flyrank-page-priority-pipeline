@@ -11,7 +11,7 @@
 
 An enterprise applied machine learning ranking system that analyzes **78.8M+ search performance facts** across 22 client domains to prioritize monthly editorial content reviews under finite human capacity (50 in-depth page audits per editor/month).
 
-The pipeline combines **calibrated gradient-boosted decline probabilities** with **empirical click loss exposure** ($\text{Priority} = \hat{p} \times \text{Impact} \times (1 + \max(0, \Delta\text{pos}))$), outperforming heuristic baselines by **+10.0% percentage points at monthly budget depth** ($K=50$) and maintaining a **+71% relative yield advantage** across wide review queues ($K=500$).
+The pipeline combines **calibrated gradient-boosted decline probabilities** with **empirical click loss exposure** (`Priority = p̂ × Impact × (1 + max(0, Δpos))`), outperforming heuristic baselines by **+10.0% percentage points at monthly budget depth** (K = 50) and maintaining a **+71% relative yield advantage** across wide review queues (K = 500).
 
 ---
 
@@ -29,13 +29,13 @@ The pipeline combines **calibrated gradient-boosted decline probabilities** with
 | Metric / Dimension | Audited Result | Ground-Truth Detail |
 |---|:---:|---|
 | **Warehouse Scale** | **78,835,655 rows** | Daily GSC/GA4 performance facts across 104 client domains (DuckDB Parquet) |
-| **Evaluation Cohort** | **38,271 URLs** | Active content items across 22 mature client domains at monthly boundary $T = \text{2026-02-01}$ |
-| **Observed Base Rate** | **15.76%** | 6,032 URLs experienced $>20\%$ organic impression drop in forward 30-day window $[T+1, T+30]$ |
-| **Top-10 Precision ($K=10$)** | **90.00% (5.71× lift)** | 9/10 true declines captured at queue head vs 80.00% heuristic baseline |
-| **Editor Monthly Budget ($K=50$)** | **66.00% (4.19× lift)** | **+10.0% pt lift** over baseline (56.00%), capturing 33 true declines and 37.6 clicks saved |
-| **Queue Depth ($K=500$)** | **52.20% (3.31× lift)** | **+70.6% (~+71%) relative yield advantage** over baseline (30.60%) by capturing non-linear decay signals |
+| **Evaluation Cohort** | **38,271 URLs** | Active content items across 22 mature client domains at monthly boundary T = 2026-02-01 |
+| **Observed Base Rate** | **15.76%** | 6,032 URLs experienced >20% organic impression drop in forward 30-day window [T+1, T+30] |
+| **Top-10 Precision (K = 10)** | **90.00% (5.71× lift)** | 9/10 true declines captured at queue head vs 80.00% heuristic baseline |
+| **Editor Monthly Budget (K = 50)** | **66.00% (4.19× lift)** | **+10.0% pt lift** over baseline (56.00%), capturing 33 true declines and 37.6 clicks saved |
+| **Queue Depth (K = 500)** | **52.20% (3.31× lift)** | **+70.6% (~+71%) relative yield advantage** over baseline (30.60%) by capturing non-linear decay signals |
 | **Client Memorization Gap** | **+12.89% pt ROC-AUC** | Severe leakage exposed under naive random splits; honest 5-fold `GroupKFold` enforced |
-| **Adversarial Leakage Audit** | **4 / 4 PASS (0 flaws)** | Invariant $t \le T$ cutoff, zero entity IDs, ablation resistance, and synthetic leak sensitivity |
+| **Adversarial Leakage Audit** | **4 / 4 PASS (0 flaws)** | Invariant t ≤ T cutoff, zero entity IDs, ablation resistance, and synthetic leak sensitivity |
 | **Operational Code Gates** | **3 Non-Bypassable Gates** | 100% cold-start compliance, 10,753 durable risers protected, 243 extreme spikes verified |
 | **Two-Clock Drift Telemetry** | **PSI = 0.0558** | Input distribution drift well below 0.10 threshold; realized base rate within safe operating band |
 
@@ -74,8 +74,8 @@ The pipeline decouples ranking into an empirical risk classifier and an impact e
 $$\text{Priority Score} = \hat{p}(\text{decline}) \times \text{Expected Clicks Lost} \times \left(1 + \max(0, \Delta\text{pos})\right)$$
 
 This mathematical formulation prevents two major operational failure modes:
-1. It ignores high-traffic evergreen articles that are structurally secure ($\hat{p} \approx 0$).
-2. It ignores low-volume tail URLs that have 95% decline probability but only 3 monthly impressions ($\text{Impact} \approx 0$).
+1. It ignores high-traffic evergreen articles that are structurally secure (`p̂ ≈ 0`).
+2. It ignores low-volume tail URLs that have 95% decline probability but only 3 monthly impressions (`Impact ≈ 0`).
 
 ---
 
@@ -134,23 +134,23 @@ The pipeline is implemented and documented across modular research notebooks in 
 
 ## 3. Operational Queue Benchmarks
 
-In production, editorial teams do not evaluate abstract metrics like ROC-AUC; they consume an ordered queue. The table below compares the audited **Heuristic Baseline** ($\Delta\text{clicks}_{28}$), a **Pure Risk Classifier** ($\hat{p}$ only), and the proposed **Two-Part ML Priority Ranker** across multiple operational review depths:
+In production, editorial teams do not evaluate abstract metrics like ROC-AUC; they consume an ordered queue. The table below compares the audited **Heuristic Baseline** (Δclicks₂₈), a **Pure Risk Classifier** (p̂ only), and the proposed **Two-Part ML Priority Ranker** across multiple operational review depths:
 
-| Queue Depth ($K$) | Operational Review Workflow | Heuristic Baseline P@K | Pure Risk Classifier P@K | Proposed ML Priority P@K | ML Lift over Base Rate | ML Yield vs Baseline |
+| Queue Depth (K) | Operational Review Workflow | Heuristic Baseline P@K | Pure Risk Classifier P@K | Proposed ML Priority P@K | ML Lift over Base Rate | ML Yield vs Baseline |
 |:---:|:---|:---:|:---:|:---:|:---:|:---:|
-| **$K = 10$** | Head-of-Queue Urgent Triage | 80.00% | 70.00% | **90.00%** | **5.71×** | **+12.5%** |
-| **$K = 20$** | Bi-Weekly Sprint Review | 70.00% | 75.00% | **80.00%** | **5.08×** | **+14.3%** |
-| **$K = 50$** | **Single Editor Monthly Budget** | 56.00% | 60.00% | **66.00%** | **4.19×** | **+17.9% (+10.0% pt)** |
-| **$K = 100$** | Multi-Editor Content Team | 42.00% | 63.00% | **60.00%** | **3.81×** | **+42.9%** |
-| **$K = 250$** | Quarterly Client Strategy Audit | 34.00% | 51.20% | **59.60%** | **3.78×** | **+75.3%** |
-| **$K = 500$** | Wide Portfolio Risk Scan | 30.60% | 50.00% | **52.20%** | **3.31×** | **+70.6% (+71%)** |
+| **K = 10** | Head-of-Queue Urgent Triage | 80.00% | 70.00% | **90.00%** | **5.71×** | **+12.5%** |
+| **K = 20** | Bi-Weekly Sprint Review | 70.00% | 75.00% | **80.00%** | **5.08×** | **+14.3%** |
+| **K = 50** | **Single Editor Monthly Budget** | 56.00% | 60.00% | **66.00%** | **4.19×** | **+17.9% (+10.0% pt)** |
+| **K = 100** | Multi-Editor Content Team | 42.00% | 63.00% | **60.00%** | **3.81×** | **+42.9%** |
+| **K = 250** | Quarterly Client Strategy Audit | 34.00% | 51.20% | **59.60%** | **3.78×** | **+75.3%** |
+| **K = 500** | Wide Portfolio Risk Scan | 30.60% | 50.00% | **52.20%** | **3.31×** | **+70.6% (+71%)** |
 
 ![Precision at K Benchmark](img/fig_capstone_precision_at_k.png)
 
 ### Key Evaluation Insights
-1. **At Single Editor Capacity ($K=50$):** ML Priority delivers **66.00% precision (4.19× lift)**, capturing 33 true declining URLs and preserving 37.6 expected monthly clicks, beating the heuristic baseline (56.00%) by **+10.00 percentage points**.
-2. **At Queue Depth ($K=500$):** While the baseline drops toward 30.60%, ML sustains **52.20% precision**, demonstrating a **+71% relative yield advantage** by identifying subtle, compounding erosions (e.g., SERP rank drift interacting with CTR decay) that if-statements cannot catch.
-3. **The Failure of Pure Risk:** Ranking solely by probability $\hat{p}$ floods the queue with low-volume tail URLs (e.g., 5 impressions dropping to 0) that have high certainty but near-zero business recovery value. The utility formulation ensures high-impact URLs are prioritized.
+1. **At Single Editor Capacity (K = 50):** ML Priority delivers **66.00% precision (4.19× lift)**, capturing 33 true declining URLs and preserving 37.6 expected monthly clicks, beating the heuristic baseline (56.00%) by **+10.00 percentage points**.
+2. **At Queue Depth (K = 500):** While the baseline drops toward 30.60%, ML sustains **52.20% precision**, demonstrating a **+71% relative yield advantage** by identifying subtle, compounding erosions (e.g., SERP rank drift interacting with CTR decay) that if-statements cannot catch.
+3. **The Failure of Pure Risk:** Ranking solely by probability p̂ floods the queue with low-volume tail URLs (e.g., 5 impressions dropping to 0) that have high certainty but near-zero business recovery value. The utility formulation ensures high-impact URLs are prioritized.
 
 ---
 
@@ -230,13 +230,26 @@ All research milestones are organized as executable notebooks. Each notebook can
 | [`w07_action_playbook.ipynb`](work/notebooks/w07_action_playbook.ipynb) | ML-10 | Tactical action playbook, operational code gates, and two-clock telemetry (PSI) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/w07_action_playbook.ipynb?flush_cache=true) |
 | [`capstone.ipynb`](work/notebooks/capstone.ipynb) | ML-11 / 12 | **Consolidated capstone pipeline** reproducing all benchmark tables and figures | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/capstone.ipynb?flush_cache=true) |
 
-### 3. Running the End-to-End Capstone
-To inspect or rerun the consolidated experimental pipeline:
+### 3. Execution & Warehouse Access Requirements
+
+> [!IMPORTANT]
+> **Hugging Face Token & Warehouse Access:**
+> Re-executing the full warehouse extraction and capstone modeling notebooks (`w03`–`w07`, `capstone.ipynb`) queries the proprietary FlyRank Search Intelligence Warehouse hosted on Hugging Face (`hf://datasets/FlyRank/internship-warehouse`). Executing these queries requires an authorized Hugging Face access token (`HF_TOKEN`) with read permissions to FlyRank's gated dataset.
+>
+> In accordance with enterprise data security standards and internship agreements, **proprietary `HF_TOKEN` credentials cannot and will not be shared in this public repository**.
+>
+> **How to review and verify this repository:**
+> - **Pre-Executed Verified Receipts:** All notebooks in [`work/notebooks/`](work/notebooks/) are committed with their complete, audited execution logs, benchmark evaluation tables, and figures fully intact. Reviewers can inspect every step directly on GitHub without re-running against the remote warehouse.
+> - **Token-Free Offline Execution:** The initial exploratory notebooks ([`w01`](work/notebooks/w01_research_question.ipynb), [`w02`](work/notebooks/w02_ml_task_framing.ipynb)) and the reference baseline pipeline in [`scripts/`](scripts/) (`python scripts/run_all.py`) execute completely offline using the bundled anonymized starter dataset ([`data/raw/content_refresh_anonymized.csv`](data/raw/content_refresh_anonymized.csv)) without requiring any Hugging Face token or external network connectivity.
+> - **Authorized Evaluators:** Evaluators possessing FlyRank dataset credentials can run the full pipeline by setting their token in the environment (`$env:HF_TOKEN = "your_token"` in PowerShell, or `export HF_TOKEN="your_token"` in Bash) or via Google Colab Secrets (`userdata.get('HF_TOKEN')`).
+
+### 4. Running the End-to-End Capstone
+To inspect the consolidated experimental pipeline:
 1. Launch Jupyter Notebook or JupyterLab:
    ```bash
    jupyter lab work/notebooks/capstone.ipynb
    ```
-2. Execute all cells sequentially. The notebook loads the cohort via DuckDB, performs the 4-part leakage audit, executes 5-fold client-grouped validation, verifies operational code gates, and renders all evaluation charts.
+2. Inspect the pre-rendered cells or execute them sequentially (if an authorized `HF_TOKEN` is configured). The notebook loads the cohort via DuckDB, performs the 4-part leakage audit, executes 5-fold client-grouped validation, verifies operational code gates, and renders all evaluation charts.
 
 > [!NOTE]
 > The scripts inside `scripts/` (`01_prepare_features.py` through `05_build_pdf_report.py`) represent the reference starter pipeline that runs on the bundled sample CSV (`data/raw/content_refresh_anonymized.csv`). All authored research, feature engineering, out-of-domain validation, and capstone modeling live inside `work/notebooks/`.
@@ -305,7 +318,7 @@ To inspect or rerun the consolidated experimental pipeline:
 
 To maintain technical credibility in enterprise production environments, this pipeline strictly adheres to the **FlyRank Non-Causal Claim Ladder**:
 
-- **What Is Claimed and Proven:** Offline Precision@50 of **66.00% (4.19× lift)** demonstrates that the Two-Part Expected Utility ranker accurately enriches declining URLs for human review, outperforming rule-based baselines across all queue depths ($K=10$ to $K=500$). The client memorization gap (+12.89% pt ROC-AUC) proves the necessity of out-of-domain group holdout validation.
+- **What Is Claimed and Proven:** Offline Precision@50 of **66.00% (4.19× lift)** demonstrates that the Two-Part Expected Utility ranker accurately enriches declining URLs for human review, outperforming rule-based baselines across all queue depths (K = 10 to K = 500). The client memorization gap (+12.89% pt ROC-AUC) proves the necessity of out-of-domain group holdout validation.
 - **What Is Explicitly NOT Claimed:**
   - *No Causal Recovery Claim:* We do not claim that rewriting these articles will causally reverse traffic decline or recover lost clicks. Proving causal refresh lift requires a prospective randomized controlled trial (A/B experiment).
   - *No Google Algorithm Reverse-Engineering:* We do not claim to predict search engine ranking updates. The model detects empirical statistical momentum shifts in Search Console telemetry.

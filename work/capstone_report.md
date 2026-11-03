@@ -2,7 +2,8 @@
 
 - **Author:** FlyRank Applied ML Engineering Fellow
 - **Lane:** Applied ML / Decision-Support Ranking & Early-Warning Systems
-- **Repo:** https://github.com/<your-username>/<repo-name>
+- **Deployed Case Study & Web Report:** https://kab-s.github.io/flyrank-page-priority-pipeline/
+- **Repo:** https://github.com/kab-s/flyrank-page-priority-pipeline
 - **Date:** 2026-11-02
 
 ---
@@ -265,8 +266,8 @@ Because organic search decline takes 30 days to confirm, we cannot immediately c
    * *Operational Safeguard:* Protects against unobserved macro shocks (such as broad Google Core Algorithm Updates or unannounced client site migrations). If portfolio decline surges outside this band ($> 5.0\%$ shift), automated model releases pause immediately for manual review and recalibration.
 
 ### Confidence and Explicit Boundaries (Non-Causal Claim Ladder)
-* **What We Claim:** Offline Precision@50 of $66.00\%$ proves that the Two-Part ML ranker accurately enriches declining pages for human review, outperforming the heuristic baseline rule across all queue depths ($K=10$ to $K=500$).
-* **What We Do Not Claim:** We do *not* claim that rewriting these articles will causally reverse traffic decline or cause recovery (proving causal refresh lift requires an A/B test). We do *not* claim to have reverse-engineered Google's search algorithms.
+* **What I Claim:** Offline Precision@50 of $66.00\%$ proves that the Two-Part ML ranker accurately enriches declining pages for human review, outperforming the heuristic baseline rule across all queue depths ($K=10$ to $K=500$).
+* **What I Do Not Claim:** I do *not* claim that rewriting these articles will causally reverse traffic decline or cause recovery (proving causal refresh lift requires an A/B test). 
 
 ---
 
@@ -282,25 +283,25 @@ Because organic search decline takes 30 days to confirm, we cannot immediately c
 To reproduce all receipts and figures from scratch from a fresh clone:
 ```bash
 # 1. Clone repository and install dependencies
-git clone https://github.com/<your-username>/<repo-name>.git
-cd ranking-scoring
+git clone https://github.com/kab-s/flyrank-page-priority-pipeline.git
+cd flyrank-page-priority-pipeline
 pip install -r requirements.txt
 
-# 2. Run Capstone Exports and Figure Generator (produces all receipts & figures)
-.venv\Scripts\python.exe scripts/w08_capstone_exports.py
+# 2. Inspect or run the consolidated capstone notebook
+jupyter lab work/notebooks/capstone.ipynb
 
-# 3. Execute Full 10-Notebook Verification Audit
-.venv\Scripts\python.exe scripts/audit_submission_integrity.py
+# 3. (Optional) Run offline reference baseline pipeline on bundled starter sample
+python scripts/run_all.py
 ```
 
 ### Committed Receipts and Artifacts
 The evaluation is checkable directly from committed receipts in `work/outputs/`:
 * `work/outputs/w07_metrics.json`: Structured benchmark metrics, gate counts, and drift receipts.
 * `work/outputs/capstone_metrics.json`: Consolidated capstone evaluation receipt.
-* `work/outputs/fig_capstone_precision_at_k.png`: Figure 1 Precision@K visualization.
-* `work/outputs/fig_capstone_split_gap.png`: Figure 2 Client Memorization Gap visualization.
-* `work/outputs/fig_capstone_pipeline.png`: Figure 3 Pipeline Architecture diagram.
-* `work/outputs/fig_capstone_action_mix.png`: Figure 4 Action Allocation bar chart.
+* `img/fig_capstone_precision_at_k.png`: Figure 1 Precision@K visualization.
+* `img/fig_capstone_split_gap.png`: Figure 2 Client Memorization Gap visualization.
+* `img/fig_capstone_pipeline.png`: Figure 3 Pipeline Architecture diagram.
+* `img/fig_capstone_action_mix.png`: Figure 4 Action Allocation bar chart.
 
 ---
 
@@ -308,7 +309,7 @@ The evaluation is checkable directly from committed receipts in `work/outputs/`:
 
 This capstone project is built upon the **FlyRank Search Intelligence Warehouse dataset**, provided as part of the FlyRank Applied Machine Learning Internship program.
 
-* **Data Provider:** FlyRank AI Inc.
+* **Data Source:** FlyRank AI Inc.
 * **Official Website:** [https://flyrank.ai](https://flyrank.ai)
 * **Dataset Scope:** 78,835,655 pseudonymized Search Console and GA4 daily performance facts (2025-01-27 to 2026-06-30).
 * **Methodological Standards:** Designed according to the Google Rules of ML, the FlyRank Non-Causal Claim Ladder, and enterprise Applied Machine Learning evaluation standards.

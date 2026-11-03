@@ -1,1 +1,1 @@
-PASTE-YOUR-DEPLOYED-PAPER-URL-HERE
+https://kab-s.github.io/flyrank-page-priority-pipeline/
