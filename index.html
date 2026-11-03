@@ -249,7 +249,7 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
       </div>
       <h1>Early-Warning Queue for Organic Click Decline</h1>
       <p class="hero-lead">
-        A client-agnostic decision-support ranker designed for <strong>an individual editor's monthly triage capacity of 50 in-depth page reviews</strong>. By coupling calibrated gradient-boosted decline probabilities with expected click loss (<code>Priority = Risk × Impact</code>), the ranker identifies declining search content before traffic collapses—while enforcing three protective operational code gates to safeguard growing articles.
+        A client-agnostic decision-support ranker designed for <strong>an individual editor's monthly triage capacity of 50 in-depth page reviews</strong>. By coupling calibrated gradient-boosted decline probabilities with expected click loss and SERP slippage (<code>Priority = p̂ × Impact × (1 + max(0, Δpos))</code>), the ranker identifies declining search content before traffic collapses—while enforcing three protective operational code gates to safeguard growing articles.
       </p>
 
       <!-- Executive KPI Cards -->
@@ -320,10 +320,10 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
         </div>
 
         <p>
-          <strong>Why ML Decouples Risk from Impact:</strong> Ranking pages solely by predicted probability floods the queue with tiny tail articles that lose 3 impressions (statistically certain, but operationally trivial). Conversely, sorting solely by historical traffic volume prioritizes massive stable articles that are not decaying. Therefore, Priority Score is computed. It decouples the decision into continuous calibrated decline risk and expected click impact:
+          <strong>Why ML Decouples Risk from Impact:</strong> Ranking pages solely by predicted probability floods the queue with tiny tail articles that lose 3 impressions (statistically certain, but operationally trivial). Conversely, sorting solely by historical traffic volume prioritizes massive stable articles that are not decaying. Therefore, Priority Score is computed. It decouples the decision into continuous calibrated decline risk, expected click impact, and SERP position slippage:
         </p>
         <p style="text-align:center;margin:20px 0">
-          <code>Priority Score = P(decline in next 30 days) × Expected Clicks Lost</code>
+          <code>Priority Score = P(decline in next 30 days) × Expected Clicks Lost × (1 + max(0, Δpos))</code>
         </p>
       </section>
 
@@ -485,10 +485,10 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
               </div>
               <h3 class="framework-title">Expected Utility Ranking</h3>
               <div class="framework-formula highlight">
-                <code>Priority = p̂ × Impact × (1 + Δpos)</code>
+                <code>Priority = p̂ × Impact × (1 + max(0, Δpos))</code>
               </div>
               <p class="framework-desc">
-                <strong>Decoupled Utility Score</strong> multiplying calibrated probability by business consequence, adjusted for SERP position slippage. Feeds the 50-page editorial triage capacity.
+                <strong>Decoupled Utility Score</strong> multiplying calibrated probability by business consequence, adjusted for SERP rank slippage: <code>(1 + max(0, Δpos))</code>. Feeds the 50-page editorial triage capacity.
               </p>
             </div>
             <div class="framework-foot">
@@ -614,7 +614,7 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
           <p>
             • <strong>The Failure of Pure Volume:</strong> Ranking pages solely by raw impressions sends editors to massive, evergreen pillar pages that are structurally secure and experiencing minor random noise.<br>
             • <strong>The Failure of Pure Risk (p̂ alone):</strong> A pure classifier ranks tiny tail pages (e.g., 5 impressions dropping to 0) with 95% decline probability. Spending finite human hours on near-zero traffic articles yields virtually no business recovery.<br>
-            • <strong>The Two-Part ML Advantage:</strong> By coupling well-calibrated statistical risk (<code>p̂</code>) with empirical business exposure (<code>Impact</code>), Two-Part ML Priority surfaces high-consequence URLs where severe decay is statistically probable—achieving <strong>90.0% Precision@10</strong> at the top of the queue and sustaining a <strong>+71% relative yield advantage</strong> across wide review depths (K=500).
+            • <strong>The Two-Part ML Advantage:</strong> By coupling well-calibrated statistical risk (<code>p̂</code>) with empirical business exposure (<code>Impact</code>) and SERP rank slippage (<code>1 + max(0, Δpos)</code>), Two-Part ML Priority surfaces high-consequence URLs where severe decay is statistically probable—achieving <strong>90.0% Precision@10</strong> at the top of the queue and sustaining a <strong>+71% relative yield advantage</strong> across wide review depths (K=500).
           </p>
         </div>
       </section>
