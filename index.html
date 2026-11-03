@@ -233,7 +233,7 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
       <a href="#limitations">Limitations</a>
       <a href="#reproducibility">Reproduce</a>
     </div>
-    <a href="https://github.com/<your-username>/<repo-name>" class="nav-cta">
+    <a href="https://github.com/kab-s/flyrank-page-priority-pipeline" class="nav-cta">
       <span>GitHub Repository</span> →
     </a>
   </div>
@@ -278,8 +278,8 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
 
       <!-- Action buttons hidden per design feedback -->
       <div class="action-strip" style="display:none">
-        <a href="https://github.com/<your-username>/<repo-name>" class="btn btn-primary">Browse Source Code</a>
-        <a href="https://github.com/<your-username>/<repo-name>/blob/main/assignments/work/notebooks/capstone.ipynb" class="btn btn-secondary">Submission Notebook</a>
+        <a href="https://github.com/kab-s/flyrank-page-priority-pipeline" class="btn btn-primary">Browse Source Code</a>
+        <a href="https://github.com/kab-s/flyrank-page-priority-pipeline/blob/main/work/notebooks/capstone.ipynb" class="btn btn-secondary">Submission Notebook</a>
         <a href="https://flyrank.ai" class="btn btn-secondary">FlyRank Data Credit</a>
       </div>
     </header>
@@ -763,7 +763,20 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
           <span class="section-badge">07 / Reproducibility</span>
           <h2 class="section-title">Reproduce It From Scratch</h2>
           <p class="section-intro">
-            Each weekly notebook is self-contained for that particular week/phase. It can be run to reproduce the results. However, an access token is required to access the Warehouse, which is not published in this paper or repo.
+            The end-to-end research methodology, data contracts, baseline, candidate model tournament, and operational playbooks are authored directly across 10 modular Jupyter notebooks in <code>work/notebooks/</code>, culminating in the consolidated capstone pipeline <code>capstone.ipynb</code>.
+          </p>
+        </div>
+
+        <div class="compare-card good" style="margin: 20px 0; border-top-color: var(--accent-primary);">
+          <div class="compare-title green">
+            <span class="badge-pill teal" style="margin-right: 6px;">Access Notice</span>
+            Hugging Face Token &amp; Warehouse Security
+          </div>
+          <p style="font-size: 14px; line-height: 1.6; color: var(--text-main); margin: 8px 0 0;">
+            Re-executing the full warehouse extraction and capstone modeling notebooks (<code>w03</code>–<code>w07</code>, <code>capstone.ipynb</code>) queries the proprietary FlyRank Search Intelligence Warehouse hosted on Hugging Face (<code>hf://datasets/FlyRank/internship-warehouse</code>). Executing these queries requires an authorized Hugging Face access token (<code>HF_TOKEN</code>) with read permissions to FlyRank's gated dataset.
+          </p>
+          <p style="font-size: 14px; line-height: 1.6; color: var(--text-subtle); margin: 8px 0 0;">
+            In accordance with enterprise data security standards and internship agreements, <strong>proprietary <code>HF_TOKEN</code> credentials cannot and will not be shared in this public repository</strong>. All notebooks in <code>work/notebooks/</code> are committed with their complete, audited execution logs, benchmark tables, and figures fully intact.
           </p>
         </div>
 
@@ -772,17 +785,24 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
             <div class="dot red"></div>
             <div class="dot yellow"></div>
             <div class="dot green"></div>
-            <span class="terminal-title">bash — clone &amp; verify</span>
+            <span class="terminal-title">bash — clone &amp; inspect</span>
           </div>
-          <pre>git clone https://github.com/&lt;your-username&gt;/&lt;repo-name&gt;.git
-cd ranking-scoring
+          <pre># 1. Clone repository and install dependencies
+git clone https://github.com/kab-s/flyrank-page-priority-pipeline.git
+cd flyrank-page-priority-pipeline
+
+# Create and activate virtual environment (Python 3.10+)
+python -m venv .venv
+source .venv/bin/activate       # On Linux/macOS
+# .venv\Scripts\Activate.ps1   # On Windows PowerShell
+
 pip install -r requirements.txt
 
-# Run Capstone Exports and Figure Generator:
-.venv\Scripts\python.exe scripts/w08_capstone_exports.py
+# 2. Inspect or run the consolidated capstone notebook
+jupyter lab work/notebooks/capstone.ipynb
 
-# Run Full 10-Notebook Verification Audit:
-.venv\Scripts\python.exe scripts/audit_submission_integrity.py</pre>
+# 3. (Optional) Run offline reference baseline pipeline on bundled starter sample
+python scripts/run_all.py</pre>
         </div>
       </section>
 
