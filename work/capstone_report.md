@@ -27,7 +27,7 @@ Unassisted manual triage across 38,000+ live URLs is impossible, while naive heu
               ┌───────────────────────────────┴───────────────────────────────┐
               ▼                                                               ▼
    Unassisted / Naive Triage                                     Page Priority Pipeline (Proposed)
-   • Triage by Raw Volume: Reviews giant stable                 • Order by Expected Utility: Priority = p̂ × Impact
+   • Triage by Raw Volume: Reviews giant stable        • Order by Expected Utility: Priority = p̂ × Impact × (1 + max(0, Δpos))
      evergreen pages; misses quiet erosions.                    • Filter by 3 Asserted Code Gates: Protects risers.
    • Triage by Recent Dip: Chases mean-                         • Action Taxonomy: Model supplies order; audited
      reversion bounces; 66.2% hit structural floor.               rule supplies actionable reason code.
@@ -47,7 +47,7 @@ Target = 1[ Σ(impr_forward_30d) < 0.80 × Σ(impr_baseline_30d) ]
 * **Asymmetric Error Costs:**
   * *Cost of False Positive (Type I):* An editor spends 4 to 8 hours rewriting an article that was merely experiencing temporary seasonality or durable growth, introducing risk of ranking destabilization and wasting scarce retainer budget.
   * *Cost of False Negative (Type II):* An unflagged high-value revenue pillar collapses silently over 30 days, resulting in compounding loss of organic search traffic and client revenue to competitors.
-* **Why ML Helps:** While simple heuristic rules identify dramatic historical drops, they cannot capture non-linear interactions across SERP position drift, multi-window momentum ratios, and traffic concentration. ML provides calibrated continuous probabilities that enable rigorous utility multiplication (Risk × Impact).
+* **Why ML Helps:** While simple heuristic rules identify dramatic historical drops, they cannot capture non-linear interactions across SERP position drift, multi-window momentum ratios, and traffic concentration. ML provides calibrated continuous probabilities that enable rigorous utility multiplication (`Priority = Risk × Impact × (1 + max(0, Δpos))`).
 
 ---
 
@@ -190,7 +190,7 @@ Evaluated across all 38,271 eligible pages under strict 5-fold client-grouped ho
 | **HistGradientBoosting (Champion)** | 5-Fold GroupKFold | **0.6898** | **0.2953** | **0.1261** | **66.00% (4.19× lift)** |
 
 ### Operational Queue Benchmark: Baseline vs Pure Risk vs ML Priority
-In production, editors do not consume isolated probabilities; they work through an ordered monthly queue. The following is the comparison of the audited Heuristic Baseline against a Pure Risk classifier (p̂ only) and the proposed Two-Part ML Priority Ranker (p̂ × Impact):
+In production, editors do not consume isolated probabilities; they work through an ordered monthly queue. The following is the comparison of the audited Heuristic Baseline against a Pure Risk classifier (p̂ only) and the proposed Two-Part ML Priority Ranker (`Priority = p̂ × Impact × (1 + max(0, Δpos))`):
 
 | Queue Tier (K) | Operational Workflow Tier | Heuristic Baseline P@K (Lift) | Pure Risk Classifier P@K (Lift) | Proposed ML Priority P@K (Lift) | Relative Yield vs Baseline |
 |:---:|:---|:---:|:---:|:---:|:---:|
@@ -250,7 +250,7 @@ Permutation importance under 5-fold client-grouped holdout confirms the dominant
 
 ### Tactical Action Framework: "Model = Order, Rule = Reason"
 To build trust with editorial teams, the pipeline decouples ranking from action assignment:
-* **The Model Supplies the Order:** Calibrated expected utility (p̂ × Impact) determines the sequence of review.
+* **The Model Supplies the Order:** Calibrated expected utility (`Priority = p̂ × Impact × (1 + max(0, Δpos))`) determines the sequence of review.
 * **The Audited Rule Supplies the Reason:** Transparent reason codes dictate the specific editorial action required.
 
 ```

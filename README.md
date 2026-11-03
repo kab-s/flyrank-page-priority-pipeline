@@ -55,7 +55,7 @@ Enterprise content agencies manage tens of thousands of published articles acros
              ┌───────────────────────────────┴───────────────────────────────┐
              ▼                                                               ▼
   Unassisted / Naive Triage                                     Page Priority Pipeline
-  • Triage by Raw Traffic Volume: Reviews giant                • Order by Expected Utility: Priority = p̂ × Impact
+  • Triage by Raw Traffic Volume: Reviews giant        • Order by Expected Utility: Priority = p̂ × Impact × (1 + max(0, Δpos))
     evergreen pages; ignores quiet erosions.                   • Filter by 3 Asserted Code Gates: Protects risers.
   • Triage by Recent Percentage Dip: Chases mean-              • Action Taxonomy: Model supplies order; audited
     reversion bounces; 66.2% hit structural floor.               rule supplies transparent reason code.
@@ -70,7 +70,9 @@ The most common industry practice is targeting pages with the largest recent tra
 
 ### The Solution: Two-Part Expected Utility Framework
 The pipeline decouples ranking into an empirical risk classifier and an impact estimator:
-$$\text{Priority Score} = \hat{p}(\text{decline}) \times \text{Expected Clicks Lost} \times \left(1 + \max(0, \Delta\text{pos})\right)$$
+```
+Priority Score = p̂(decline) × Expected Clicks Lost × (1 + max(0, Δpos))
+```
 
 This mathematical formulation prevents two major operational failure modes:
 1. It ignores high-traffic evergreen articles that are structurally secure (`p̂ ≈ 0`).
@@ -174,7 +176,7 @@ To quantify this error, the champion model architecture was evaluated under both
 ## 5. Action Taxonomy: "Model = Order, Rule = Reason"
 
 Machine learning models predict decline probabilities, but editorial teams need specific, actionable interventions. To build trust and prevent edit fatigue, the pipeline strictly separates ranking from recommendation:
-- **The Machine Learning Model Supplies the Order:** Expected utility determines which URLs appear first.
+- **The Machine Learning Model Supplies the Order:** Calibrated expected utility (`Priority = p̂ × Impact × (1 + max(0, Δpos))`) determines which URLs appear first.
 - **Audited Deterministic Rules Supply the Reason:** Pre-registered reason codes assign each page to a specific tactical action category.
 
 ### Breakdown of the Top-50 Monthly Editorial Queue
