@@ -11,7 +11,7 @@
 
 An enterprise applied machine learning ranking system that analyzes **78.8M+ search performance facts** across 22 client domains to prioritize monthly editorial content reviews under finite human capacity (50 in-depth page audits per editor/month).
 
-The pipeline combines **calibrated gradient-boosted decline probabilities** with **empirical click loss exposure** ($\text{Priority} = \hat{p} \times \text{Impact} \times (1 + \max(0, \Delta\text{pos}))$), outperforming heuristic baselines by **+12.0% percentage points at monthly budget depth** ($K=50$) and maintaining **+77% relative yield advantage** across wide review queues ($K=500$).
+The pipeline combines **calibrated gradient-boosted decline probabilities** with **empirical click loss exposure** (`Priority = p̂ × Impact × (1 + max(0, Δpos))`), outperforming heuristic baselines by **+12.0% percentage points at monthly budget depth** ($K=50$) and maintaining **+77% relative yield advantage** across wide review queues ($K=500$).
 
 ---
 
