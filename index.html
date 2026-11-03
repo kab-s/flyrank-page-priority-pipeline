@@ -292,7 +292,7 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
         <div class="figure-card">
           <img src="img/fig_capstone_precision_at_k.png" alt="Operational Precision@K curve comparing ML Priority vs Baseline vs Pure Risk across review tiers">
           <div class="figure-caption">
-            <b>Figure 1: Operational Precision Across Review Tiers under 5-Fold Client-Grouped Holdout.</b> At an editor's 50-page monthly review workload, ML Priority achieves <b>66.00% precision</b> (33 true declines identified, 27.1 clicks saved) vs 56.00% for the baseline rule (+10.0% pt lift). Beyond 50 rows, the heuristic rule degrades rapidly to 30.6% while ML Priority sustains high precision out to K=500 (52.20% vs 30.60%, delivering a <b>+71% relative yield advantage</b>).
+            <b>Figure 1: Operational Precision Across Review Tiers under 5-Fold Client-Grouped Holdout.</b> At an editor's 50-page monthly review workload, ML Priority achieves <b>66.00% precision</b> (33 true declines identified, 37.6 clicks saved) vs 56.00% for the baseline rule (+10.0% pt lift). Beyond 50 rows, the heuristic rule degrades rapidly to 30.6% while ML Priority sustains high precision out to K=500 (52.20% vs 30.60%, delivering a <b>+71% relative yield advantage</b>).
           </div>
         </div>
       </div>
@@ -357,8 +357,8 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
                             <tr>
                 <td><strong>Naive Random Split</strong></td>
                 <td>80/20 Random Rows (Cross-Domain Leakage)</td>
-                <td>0.8191</td>
-                <td>0.5511</td>
+                <td>0.8187</td>
+                <td>0.5653</td>
                 <td>100.0% (6.34× lift)</td>
                 <td><span class="badge-pill red">Fatal Client Leak</span></td>
               </tr>
@@ -367,15 +367,15 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
                 <td>5-Fold <code>GroupKFold</code> by Client Hash</td>
                 <td>0.6898</td>
                 <td>0.2953</td>
-                <td>60.0% (3.81× lift)</td>
+                <td>66.0% (4.19× lift)</td>
                 <td><span class="badge-pill teal">Client-Agnostic</span></td>
               </tr>
               <tr>
                 <td><strong>Client Memorization Gap</strong></td>
                 <td>Leakage Penalty Overstatement</td>
-                <td><strong>+12.93% pt</strong></td>
-                <td><strong>+25.58% pt</strong></td>
-                <td><strong>+40.00% pt</strong></td>
+                <td><strong>+12.89% pt</strong></td>
+                <td><strong>+27.00% pt</strong></td>
+                <td><strong>+34.00% pt</strong></td>
                 <td><span class="badge-pill amber">Critical Finding</span></td>
               </tr>
             </tbody>
@@ -385,7 +385,7 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
         <div class="figure-card">
           <img src="img/fig_capstone_split_gap.png" alt="Client Memorization Gap comparison chart">
           <div class="figure-caption">
-            <b>Figure 2: The Client Memorization Gap.</b> Naive row splits overstate ROC-AUC by nearly 13 percentage points (+12.93% pt) and PR-AUC by 25.58 percentage points. An enterprise ML model evaluated on random splits will fail immediately upon onboarding brand-new client domains.
+            <b>Figure 2: The Client Memorization Gap.</b> Naive row splits overstate ROC-AUC by nearly 13 percentage points (+12.89% pt) and PR-AUC by 27.00 percentage points (+34.00% pt on Precision@50). An enterprise ML model evaluated on random splits will fail immediately upon onboarding brand-new client domains.
           </div>
         </div>
       </section>
@@ -535,7 +535,7 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
                 <td><strong>0.6898</strong></td>
                 <td><strong>0.2953</strong></td>
                 <td><strong>0.1261</strong></td>
-                <td><strong>60.00% (3.81× lift)</strong></td>
+                <td><strong>66.00% (4.19× lift)</strong></td>
               </tr>
             </tbody>
           </table>
@@ -655,31 +655,31 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
             <div class="dash-row">
               <div class="dash-rank">#01</div>
               <div>
-                <div class="dash-item-title">article_4f7a…</div>
-                <div class="dash-item-sub">Client 09c2… · 30d Impr: 4,820 · Position Slip: +1.8</div>
+                <div class="dash-item-title">content_db16…</div>
+                <div class="dash-item-sub">Client client_9958… · Reason: MODERATE_DECAY_AND_RANK_SLIP</div>
               </div>
-              <div class="dash-act urgent">Immediate Content Refresh</div>
-              <div class="dash-score-pill">Priority: 38.4<br><span style="font-size:10px;color:var(--text-subtle)">p = 0.74</span></div>
+              <div class="dash-act deepdive">Internal Linking Reinforce</div>
+              <div class="dash-score-pill">Priority: 265.2<br><span style="font-size:10px;color:var(--text-subtle)">p = 0.67</span></div>
             </div>
 
             <div class="dash-row">
               <div class="dash-rank">#02</div>
               <div>
-                <div class="dash-item-title">article_b21c…</div>
-                <div class="dash-item-sub">Client 09c2… · 30d Impr: 12,400 · Position Slip: 0.0</div>
+                <div class="dash-item-title">content_a014…</div>
+                <div class="dash-item-sub">Client client_9958… · Reason: SEVERE_VELOCITY_DROP_AND_RANK_SLIP</div>
               </div>
-              <div class="dash-act deepdive">Quiet Erosion Deep-Dive</div>
-              <div class="dash-score-pill">Priority: 31.2<br><span style="font-size:10px;color:var(--text-subtle)">p = 0.58</span></div>
+              <div class="dash-act urgent">Immediate Content Refresh</div>
+              <div class="dash-score-pill">Priority: 181.2<br><span style="font-size:10px;color:var(--text-subtle)">p = 0.75</span></div>
             </div>
 
             <div class="dash-row">
               <div class="dash-rank">#03</div>
               <div>
-                <div class="dash-item-title">article_8e3d…</div>
-                <div class="dash-item-sub">Client 14a7… · 30d Impr: 410 · Retrospective Drop: 62%</div>
+                <div class="dash-item-title">content_2e16…</div>
+                <div class="dash-item-sub">Client client_23a6… · Reason: QUIET_EROSION_RISK</div>
               </div>
-              <div class="dash-act floor">Floor Stabilization Review</div>
-              <div class="dash-score-pill">Priority: 27.5<br><span style="font-size:10px;color:var(--text-subtle)">p = 0.65</span></div>
+              <div class="dash-act deepdive">Quiet Erosion Deep-Dive</div>
+              <div class="dash-score-pill">Priority: 176.7<br><span style="font-size:10px;color:var(--text-subtle)">p = 0.47</span></div>
             </div>
           </div>
         </div>
@@ -694,7 +694,7 @@ footer{padding:44px 60px;background:#0B0F12;color:var(--text-subtle);font-size:1
         <div class="figure-card">
           <img src="img/fig_capstone_action_mix.png" alt="Top-50 Action Allocation Bar Chart">
           <div class="figure-caption">
-            <b>Figure 4: Tactical Action Allocation for an Editor's Top-50 Review Workload.</b> 23 pages allocated to Floor Stabilization Review / Cooldown Watchlist (protecting editors from rewriting stabilized floors), 11 to Immediate Content Refresh & SERP Intent Update, 7 to Quiet Erosion Deep-Dive, 6 to Tracking & Query Verification, 2 to Passive Monitoring, 1 to Internal Linking & Authority Reinforcement.
+            <b>Figure 4: Tactical Action Allocation for an Editor's Top-50 Review Workload.</b> 31 pages allocated to Floor Stabilization Review / Cooldown Watchlist (protecting editors from rewriting stabilized floors), 11 to Immediate Content Refresh & SERP Intent Update, 3 to Tracking & Query Verification, 3 to Quiet Erosion Deep-Dive, 1 to Internal Linking & Authority Reinforcement, 1 to Passive Monitoring.
           </div>
         </div>        <h3>Two-Clock Production Monitoring</h3>
         <p style="margin-bottom:20px;color:var(--text-subtle);font-size:15px;line-height:1.6">
